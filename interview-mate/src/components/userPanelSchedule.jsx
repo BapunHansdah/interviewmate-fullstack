@@ -3,7 +3,6 @@ import {BsCheckSquareFill} from 'react-icons/bs'
 export default function interviewPanelSchedules(){
 	return(
 		 <div className="mt-5">
-		   <div className="mt-2"><h1 className="text-2xl">Slots</h1></div>
 		  <div className="grid overflow-x-scroll md:overflow-auto mt-5">
 		    <div className="flex font-bold mx-auto">
 		     <div className="w-96 h-10 border flex items-center justify-center bg-black text-white">Interviewer</div>

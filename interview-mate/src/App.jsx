@@ -4,11 +4,13 @@ import Header from './components/header'
 import Footer from './components/footer'
 import Login from './components/login'
 import SignUp from './components/signup'
-import InterviewerAdminPanel from './components/interviewerAdminPanel'
-import UserAdminPanel from './components/userpanel'
 
-import InterviewerProfile from './components/interviewerprofile'
-import UserProfile from './components/userprofile'
+import AdminPanel from './components/AdminPanel'
+
+import Profile from './components/profile'
+
+import SearchResult from './components/searchResultPage'
+
 
 
 
@@ -27,10 +29,9 @@ function App() {
             <Route path='/' element={<Main />} />
             <Route path='/login' element={<Login />} />
             <Route path='/signup' element={<SignUp />} />
-            <Route path='/interviewer-profile' element={<InterviewerProfile/>} />
-            <Route path='/interviewer-panel' element={<InterviewerAdminPanel/>} /> 
-            <Route path='/user-panel' element={<UserAdminPanel/>} />   
-            <Route path='/user-profile' element={<UserProfile/>} />            
+            <Route path='/profile' element={<Profile/>} />
+            <Route path='/panel' element={<AdminPanel/>} /> 
+            <Route path='/search' element={<SearchResult/>} />            
           </Routes>
         <Footer/>
       </BrowserRouter> 

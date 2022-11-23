@@ -1,5 +1,6 @@
 import react from 'react'
 import '../index.css'
+import {Link} from 'react-router-dom'
 
 import InterviewerPost from './interviewerPost'
 import HeroSection from './herosections'
@@ -10,7 +11,7 @@ function Main(){
 
              <div className="flex flex-col gap-5 md:flex-row items-center max-w-[1000px] mx-auto mt-10 p-5">
                 <div className="">
-                   <h1 className="text-2xl md:text-4xl font-semibold text-center md:text-left">Level Up <br/><span className="text-4xl md:text-6xl text-blue-700">YOUR SKILLS</span></h1>
+                   <h1 className="text-2xl md:text-4xl font-semibold text-center md:text-left">Prepare <br/><span className="text-4xl md:text-6xl text-blue-700">Mock Interviews</span></h1>
                 </div>
              	<HeroSection/>
              </div>
@@ -18,11 +19,11 @@ function Main(){
 {/*------------------------------------interviewer search ---------------------------------*/}
 
                        <div className="lg:w-2/12">
-                           <div className="p-2 max-w-sm mx-auto flex flex-col lg:flex-col justify-start lg:shadow">
+                           <div className="p-2 max-w-sm mx-auto bg-white flex flex-col lg:flex-col justify-start lg:shadow">
                              <h1 className="text-xl  text-center font-semibold mb-2">Search Your Topic</h1>
                              <div className="flex items-center flex-col gap-2">
                               <input className='w-full p-1 border'/>
-                              <button className='bg-black p-1 text-white w-full hover:bg-opacity-80'>search</button>
+                              <button className='bg-black p-1 text-white w-full hover:bg-opacity-80'><Link to="/search">search</Link></button>
                              </div>
                            </div>                            
                        </div>
@@ -38,7 +39,7 @@ function Main(){
 {/*------------------------------------right bar for sign up--------------------------------------*/}
 
                    <div className="lg:w-3/12">
-                   	  <div className="border p-2 flex flex-col md:flex-row lg:flex-col justify-between shadow">
+                   	  <div className="border p-2 flex flex-col md:flex-row lg:flex-col justify-between shadow bg-white">
                    	      <div>
                    	  	     <h1 className="text-xl  text-center font-semibold mb-5">Prepare for interviews to crack top companies</h1>
                    	  	     <button className='border w-full border-black text-black font-semibold text-sm px-2 py-1 hover:bg-black hover:text-white'>Sign Up as interviewee</button>

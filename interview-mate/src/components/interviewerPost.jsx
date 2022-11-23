@@ -4,7 +4,7 @@ import {AiOutlineSchedule} from 'react-icons/ai'
 
 export default function InterviewerPost(){
 	return(	
-		<div className="p-5 border shadow">
+		<div className="p-5 border shadow bg-white">
          <div className="flex w-full justify-between">
            <div className="flex gap-2 item-center ">
 
@@ -14,7 +14,7 @@ export default function InterviewerPost(){
 
 			    <div className="">
 					  <div className="flex flex-col gap-2">
-					     <h3 className="font-semibold cursor-pointer hover:text-gray-800"><Link to="/interviewer-profile">Interviewer name 1</Link></h3>
+					     <h3 className="cursor-pointer hover:text-gray-800"><Link to="/profile">Interviewer name 1</Link></h3>
 					     <span className="flex items-center gap-2 text-xs text-gray-700">9.8/10<AiFillStar/><AiFillStar/><AiFillStar/><AiFillStar/><AiFillStar/></span>
             </div>
 				</div>
@@ -23,7 +23,7 @@ export default function InterviewerPost(){
 
 			<div className="">
 				  <div className="">
-				     $<span className="font-semibold">30/hr</span>
+				     $<span className="">30/hr</span>
 				  </div>
 			</div>
           </div>
@@ -41,16 +41,6 @@ export default function InterviewerPost(){
            <div className="w-full grid grid-cols-3 md:grid-cols-6 gap-2 mt-2 border p-2">
             <span className="px-2 py-1 text-xs text-gray-700 bg-opacity-60 border rounded hover:bg-black hover:text-white cursor-pointer">2:30 PM</span>
             <span className="px-2 py-1 text-xs text-gray-700 bg-opacity-60 border rounded hover:bg-black hover:text-white cursor-pointer">1:30 PM</span>
-            <span className="px-2 py-1 text-xs text-gray-700 bg-opacity-60 border rounded hover:bg-black hover:text-white cursor-pointer">12:30 PM</span>
-            <span className="px-2 py-1 text-xs text-gray-700 bg-opacity-60 border rounded hover:bg-black hover:text-white cursor-pointer">11:30 PM</span>
-            <span className="px-2 py-1 text-xs text-gray-700 bg-opacity-60 border rounded hover:bg-black hover:text-white cursor-pointer">2:30 PM</span>
-            <span className="px-2 py-1 text-xs text-gray-700 bg-opacity-60 border rounded hover:bg-black hover:text-white cursor-pointer">1:30 PM</span>
-            <span className="px-2 py-1 text-xs text-gray-700 bg-opacity-60 border rounded hover:bg-black hover:text-white cursor-pointer">12:30 PM</span>
-            <span className="px-2 py-1 text-xs text-gray-700 bg-opacity-60 border rounded hover:bg-black hover:text-white cursor-pointer">11:30 PM</span>
-            <span className="px-2 py-1 text-xs text-gray-700 bg-opacity-60 border rounded hover:bg-black hover:text-white cursor-pointer">2:30 PM</span>
-            <span className="px-2 py-1 text-xs text-gray-700 bg-opacity-60 border rounded hover:bg-black hover:text-white cursor-pointer">1:30 PM</span>
-            <span className="px-2 py-1 text-xs text-gray-700 bg-opacity-60 border rounded hover:bg-black hover:text-white cursor-pointer">12:30 PM</span>
-            <span className="px-2 py-1 text-xs text-gray-700 bg-opacity-60 border rounded hover:bg-black hover:text-white cursor-pointer">11:30 PM</span>
           </div>
 
           <div className="w-full mt-2">
