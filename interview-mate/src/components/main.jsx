@@ -1,7 +1,6 @@
 import react from 'react'
 import '../index.css'
 import {Link} from 'react-router-dom'
-
 import InterviewerPost from './interviewerPost'
 import HeroSection from './herosections'
 

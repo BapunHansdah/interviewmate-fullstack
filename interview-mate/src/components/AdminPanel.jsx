@@ -4,19 +4,19 @@ import {MdEditLocationAlt} from 'react-icons/md'
 import {BsFillArrowLeftSquareFill} from 'react-icons/bs'
 import {BsFillArrowRightSquareFill} from 'react-icons/bs'
 import {RiImageEditFill} from 'react-icons/ri'
-import Reviews from './comments'
-import Earnings from './Earnings'
+import Reviews from './Sections/comments'
+import Earnings from './Sections/Earnings'
 import InterviewPanelSchedules from './PanelSchedules'
 import moment from 'moment'
 import {AiOutlineRight} from 'react-icons/ai'
 import {AiOutlineDown} from 'react-icons/ai'
 import {useCallback,useState,useEffect} from 'react'
 import {DataJSON} from './Data'
-import Slot from './Slot'
-import Topic from './Topic'
-import Tabs from './tabs'
-import INFO from './Infos'
-import UserPanelSchedule from './userPanelSchedule'
+import Slot from './Sections/Slot'
+import Topic from './Sections/Topic'
+import Tabs from './Sections/tabs'
+import INFO from './Sections/Infos'
+import UserPanelSchedule from './Sections/userPanelSchedule'
 
 
 
@@ -117,12 +117,16 @@ function submitSlotData(e){
 
 
 return(	
-		<div className="p-5 border shadow max-w-[1000px] bg-white mx-auto mt-10 text-sm">
+	<div className="p-5 border shadow max-w-[1000px] bg-white mx-auto mt-10 text-sm">
+
+
 {/*---------------------------profile picture------------------------*/}
     <div className="flex gap-2 cursor-pointer">
         <img className="w-20" src="https://www.nicepng.com/png/detail/301-3012856_account-user-profile-avatar-comments-free-image-user.png"/>
         <div className="flex items-center"><span className="text-lg text-center"><RiImageEditFill/></span></div>
     </div>
+
+
 
 {/*---------------------------- data ----------------------------------*/}
    <div className="border-b border-black py-5">
@@ -130,7 +134,7 @@ return(
           <Tabs 
                expand = {expand} 
                expandTab={expandTab} 
-               title={"Detail"} 
+               title={"Details"} 
                tabIndex={0}
           />
 
@@ -143,6 +147,10 @@ return(
              />
          </div>
         </div>
+
+
+
+
 {/*---------------------------add topic-------------------------------------------*/}
 {
   Data.user_role ==="interviewer" ?
@@ -151,7 +159,7 @@ return(
           <Tabs 
                expand = {expand} 
                expandTab={expandTab} 
-               title={"Add Topic"} 
+               title={"Add Topics"} 
                tabIndex={1}
           />
           
@@ -167,6 +175,8 @@ return(
         :
           <></>
 }
+
+
 {/*-----------------------------------schedule--------------------------------------*/}
 {
   Data.user_role ==="interviewer" ?
@@ -192,6 +202,10 @@ return(
           :
           <></>
 }
+
+
+
+
 {/*--------------------------------slot list ----------------------------------------------*/}
 
           <div className="border-b border-black py-5">        
@@ -208,6 +222,9 @@ return(
              }
              </div>
           </div>
+          
+
+
           
 {/*------------------------------------ earnings------------------------------------*/}
 

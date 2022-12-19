@@ -1,0 +1,12 @@
+register
+
+{
+  "username":"barun",
+  "email":"bapunhansdah777@gmail.com",
+  "password":"123456"
+}
+
+activation 
+{
+  "activation_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJhcnVuIiwiZW1haWwiOiJiYXB1bmhhbnNkYWg3NzdAZ21haWwuY29tIiwicGFzc3dvcmQiOiIkMmEkMTAkSFd1UDJiLmg4NU1XMmdCQXN6eGc2T0VLc2pJOEJxbm5zU0VwRG5ZSzRCanZ4TkZSTmthOWEiLCJpYXQiOjE2Njk0Mzk2NDQsImV4cCI6MTY2OTQzOTk0NH0.oCdr7bn7MbTzXqccOF7qmCEcdbDW8HTqExE0_Z7MShk"
+}

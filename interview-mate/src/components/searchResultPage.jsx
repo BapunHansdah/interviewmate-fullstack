@@ -15,10 +15,10 @@ function SearchResult(){
 		<div className="max-w-[1440px] mx-auto">
 
              <div className="max-w-[1200px] flex flex-col justify-center lg:flex-row mx-auto gap-5 mt-10">
-                       <div className="hidden lg:w-3/12">
+                       <div className="hidden  lg:w-3/12">
                           
                        </div>
-                       <div className="lg:w-9/12 flex justify-between p-2 border">
+                       <div className="lg:w-9/12 flex justify-between bg-white p-2 border">
                           <div className="px-2 py-1 flex items-center gap-2 cursor-pointer">Filter<BsFillFilterSquareFill/></div>
                           <div className="px-2 py-1 flex items-center gap-2 cursor-pointer">Sort by<FaSortAmountDown/></div>
                        </div>
@@ -26,8 +26,9 @@ function SearchResult(){
              </div>      
              <div className="max-w-[1200px]  flex flex-col justify-center lg:flex-row mx-auto gap-5 mt-2">
 {/*------------------------------------interviewer search ---------------------------------*/}                      
-                       <div className="lg:w-3/12 hidden z-10 bg-white">
-                           <div className="p-2 flex flex-col lg:flex-col justify-start lg:shadow">
+                       <div className="hidden lg:w-3/12 z-10">
+
+                           <div className="p-2 flex flex-col lg:flex-col justify-start shadow bg-white mb-5">
                              <h1 className="text-xl  text-center font-semibold mb-2">Search Your Topic</h1>
                              <div className="flex items-center flex-col gap-2">
                               <input className='w-full p-1 border'/>
@@ -35,7 +36,7 @@ function SearchResult(){
                              </div>
                            </div> 
 
-                            <div className="px-2 flex flex-col lg:flex-col justify-start lg:shadow py-5">
+                            <div className="px-2 flex flex-col lg:flex-col justify-start shadow py-5 bg-white">
                             <div className="border-y border-black p-5 ">
                               <div className="flex items-center justify-between gap-2 text-xl my-2">
                                  <h1 className="font-bold">Ratings</h1>
@@ -114,8 +115,6 @@ function SearchResult(){
 {/*------------------------------------right bar for sign up--------------------------------------*/}
 
                    
-{/*------------------------------------right bar for search--------------------------------------*/}
-
              </div>
 
 		</div>

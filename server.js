@@ -1,7 +1,7 @@
 import express from 'express'
 import dotenv from 'dotenv'
-// import {connectDB} from './config/db.js'
-// import allRoutes from './router/index.js'
+import {connectDB} from './config/db.js'
+import allRoutes from './routes/index.js'
 import cookieparser from 'cookie-parser'
 import cors from'cors'
 
@@ -20,25 +20,25 @@ const app = express()
 app.use(cors())
 app.use(cookieparser())
 app.use(express.json())
-// app.use('/api',allRoutes)
+app.use('/api',allRoutes)
 
 //const httpServer = http.createServer(app)
 
-// if(process.env.NODE_ENV==="production"){
+if(process.env.NODE_ENV==="production"){
    app.use(express.static('interview-mate/dist'))
 
    app.get("*",(req,res)=>{
         res.sendFile(path.resolve(__dirname,'interview-mate','dist','index.html'))
     })
-// }
+}
 
-// else{
+else{
 
-// app.get("/",(req,res)=>{
-//       res.send("api running")
-// })
+app.get("/",(req,res)=>{
+      res.send("api running")
+})
 
-// }
+}
 
 // await server.start();
 // app.applyMiddleware({
@@ -46,6 +46,6 @@ app.use(express.json())
 // })
 
 app.listen(port,()=>{
-   // connectDB()   
+   connectDB()
 	console.log(`app started at port ${port}`)
 })
