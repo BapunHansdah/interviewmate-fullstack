@@ -25,7 +25,7 @@ const [profileData,setProfileData] = useState({})
 
 async function getProfileData(){
         try{
-             await axios.get(`http://localhost:4000/api/public/profile/${name}`).then(res=>{
+             await axios.get(`/api/public/profile/${name}`).then(res=>{
                   setProfileData(res.data)
              })
         }catch(err){
