@@ -1,6 +1,10 @@
-export default function sample({submitInfo,handleChangeInfo,Info,Data}){
 
 
+export default function sample({submitInfo,handleChangeInfo,Info,Data,loading}){
+
+  if(loading || Info.fullname === undefined){
+       return <>Loading...</>
+  }
 	return(
 		  <>
 		    <form className="py-5" onSubmit={submitInfo}>

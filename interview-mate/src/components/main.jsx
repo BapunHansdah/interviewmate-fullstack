@@ -1,10 +1,19 @@
-import react from 'react'
+import react,{useEffect} from 'react'
 import '../index.css'
-import {Link} from 'react-router-dom'
+import {Link,useNavigate} from 'react-router-dom'
 import InterviewerPost from './interviewerPost'
 import HeroSection from './herosections'
+import useAuth from './useAuth'
+import getUserInfo from './Hooks/getUserInfo'
+import axios from 'axios'
+import {setProfileData} from '../actions/index'
+import {useDispatch} from 'react-redux'
+
 
 function Main(){
+
+const {info,loading,auth} = getUserInfo()
+
 	return(	
 		<div className="max-w-[1440px] mx-auto">
 
@@ -17,7 +26,7 @@ function Main(){
              <div className="max-w-[1200px] flex flex-col lg:flex-row mx-auto gap-5 mt-10">
 {/*------------------------------------interviewer search ---------------------------------*/}
 
-                       <div className="lg:w-2/12">
+                       <div className={`${!loading && auth.isLoggedIn ?"lg:w-3/12" :"lg:w-2/12"}`}>
                            <div className="p-2 max-w-sm mx-auto bg-white flex flex-col lg:flex-col justify-start lg:shadow">
                              <h1 className="text-xl  text-center font-semibold mb-2">Search Your Topic</h1>
                              <div className="flex items-center flex-col gap-2">
@@ -28,15 +37,13 @@ function Main(){
                        </div>
 
 {/*---------------------------------interviewer profiles--------------------------*/}
-                  <div className="flex flex-col w-full lg:w-7/12 gap-10">
-	                   <InterviewerPost />
-	                   <InterviewerPost />
-	                   <InterviewerPost />
+                  <div className={`flex flex-col w-full ${!loading && auth.isLoggedIn ?"lg:w-9/12" :"lg:w-7/12"} gap-10`}>
 	                   <InterviewerPost />
                       <div className="text-center"><button className="bg-black text-white py-1 px-2">Load More</button></div>
                    </div>
 {/*------------------------------------right bar for sign up--------------------------------------*/}
-
+                 {
+                    loading && !auth.isLoggedIn ? 
                    <div className="lg:w-3/12">
                    	  <div className="border p-2 flex flex-col md:flex-row lg:flex-col justify-between shadow bg-white">
                    	      <div>
@@ -50,9 +57,8 @@ function Main(){
                    	      </div>
                    	  </div>
                    </div>
-
-{/*------------------------------------right bar for search--------------------------------------*/}
-
+                   :<></>
+                }
              </div>
 
 		</div>

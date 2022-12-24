@@ -8,9 +8,9 @@ const infoSchema = new Schema({
      required: true,
      ref: 'User'
    },
-	image:{
+	fullname:{
 		type:String,
-		required:true
+		required:true,
 		max:30
 	},
 	location:{
@@ -19,11 +19,16 @@ const infoSchema = new Schema({
 	},
 	bio:{
 		type:String,
-		required:true,
 		max:120
-	}
+	},
+	website:{
+		type:String
+	},
+	avatar: {
+        type: String,
+        default:"https://www.nicepng.com/png/detail/301-3012856_account-user-profile-avatar-comments-free-image-user.png"
+  }
 })
 
 const Info = model("Info", infoSchema);
-
-module.exports = Info;
+export default Info

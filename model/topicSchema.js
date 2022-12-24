@@ -3,17 +3,18 @@ import mongoose from 'mongoose'
 const {model,Schema} = mongoose
 
 const topicSchema = new Schema({
-	user:{
+	by:{
      type: mongoose.Schema.Types.ObjectId,
      required: true,
      ref: 'User'
    },
-   topic:{
-     type: [String]
+   title:{
+     type: String,
+     required: true,
+     max:30
    }
-
 })
 
 const topics = model("topics", topicSchema);
 
-module.exports = topics;
+export default topics

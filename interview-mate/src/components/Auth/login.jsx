@@ -2,26 +2,57 @@ import {Link} from 'react-router-dom'
 import {useState} from 'react'
 import axios from 'axios'
 import {useDispatch} from 'react-redux'
-import {useNavigate} from 'react-router-dom'
+import {useNavigate,Navigate} from 'react-router-dom'
+import useAuth from '../useAuth'
 
 function Login(){
 	const [sign_info,setSign_info] = useState({})
    const dispatch=useDispatch()
    const navigate = useNavigate()
+   const {auth,loading} = useAuth()
 
    async function signInUser(e){
    	e.preventDefault()
    	try{
    	  await axios.post('api/auth/signin',sign_info)
-        navigate('/')
+        refreshPage()
    	}catch(err){
    	  console.log(err)
+
    	}
    }
 
    function changeHandle(e){
    	setSign_info({...sign_info,[e.target.name]:e.target.value})
    }
+
+
+
+   function refreshPage() {
+     window.location.reload(false);
+     return ;
+  }
+
+   // useEffect(()=>{
+     
+   // },[auth.isLoggedIn])
+
+    if(loading){
+       return <>loading</>
+    }
+
+
+   
+   if(auth.isLoggedIn){
+      return(
+         <>
+           <Navigate to="/" />
+         </>
+         )
+   }
+
+
+   
 	return(	
 		<div className="max-w-sm mx-auto">
              <form className="flex flex-col gap-2 mt-20 p-2" onSubmit={signInUser}>

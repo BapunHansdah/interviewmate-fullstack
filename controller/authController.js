@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs'
 import User from '../model/userSchema.js'
+import Info from '../model/infoSchema.js'
 import mongoose from 'mongoose'
 import createToken from '../utils/createToken.js'
 import {sendEmailRegister} from '../utils/sendMail.js'
@@ -76,8 +77,26 @@ export const activate = async (req,res,next) =>{
 		    	username,email,password
 		    })
 
-		    await newUser.save();
-		    return res.status(200).json({msg:"You have succesfully registered ! please sign in to your account"})
+		    await newUser.save((err,auth)=>{
+		    	if(err){
+		    		console.log(err)
+		    	}else{
+		    		const newInfo = new Info({
+		    			user:auth._id,
+		    			fullname:email.substring(0,email.indexOf('@')),
+		    	        location:'',
+		    	        bio:'',
+		    	        website:''
+		    		}) 
+		    		newInfo.save(err=>{
+		    			if(err){
+		    				console.log(err)
+		    			}else{
+		                    return res.status(200).json({msg:"You have succesfully registered ! please sign in to your account"})
+		    			}
+		    		})
+		    	}
+		    });
 		  }
 
 		  catch(err){
@@ -113,7 +132,7 @@ export const signin = async (req,res,next)=>{
 		}
 
 		//refresh token
-		const rf_token =createToken.refresh({id:user._id})
+		const rf_token =createToken.refresh({id:user.id})
 
 		return res.cookie("_apprftoken",rf_token,{httpOnly:true,path:"/api/auth/access",maxAge: 24 * 60 * 60 * 1000}).status(200).json({name:user.username,msg:"sign in success"})
 
@@ -138,7 +157,7 @@ export const access = async (req,res,next)=>{
 			if(err){
 				return res.status(400).json({msg:"Please sign in again"})
 			}
-			const ac_token = createToken.access({ id: user._id });
+			const ac_token = createToken.access({ id: user.id });
 			return res.status(200).json({ ac_token });
 		})
 

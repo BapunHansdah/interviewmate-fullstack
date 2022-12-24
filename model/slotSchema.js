@@ -3,18 +3,19 @@ import mongoose from 'mongoose'
 const {model,Schema} = mongoose
 
 const slotSchema = new Schema({
-	slotBy:{
-     type: mongoose.Schema.Types.ObjectId,
-     required: true,
-     ref: 'User'
+	by:{
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'User'
    },
 	booked:{
 		type:Boolean,
 		default:false
 	},
 	bookedBy:{
-		type:mongoose.Schema.Types.ObjectId,
-		default:""
+		type:String,
+		default:"",
+		ref:'User'
 	},
 	rating:{
 		type:Number,
@@ -43,8 +44,8 @@ const slotSchema = new Schema({
 		type:Boolean,
 		default:false
 	}
-})
+},{timestamps:true})
 
-const slots = model("Slots", slotSchema);
+const Slots = model("Slots", slotSchema);
 
-module.exports = slots;
+export default Slots

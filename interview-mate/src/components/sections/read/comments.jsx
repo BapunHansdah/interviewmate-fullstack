@@ -6,7 +6,9 @@ export default function Comments({reviewData}){
 
     // console.log(reviewData)
 	return(
-           <>
+           <div className="mt-5">
+            <h2 className="text-2xl">Reviews</h2>
+             <div className="border p-2 flex flex-col gap-2 mt-4">
              {
                 reviewData.map((r,i)=>{
                     return (
@@ -34,6 +36,7 @@ export default function Comments({reviewData}){
                         )
                 })
              }
-         </>
+               </div>
+          </div>
 		)
 }

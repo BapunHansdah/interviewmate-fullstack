@@ -28,12 +28,8 @@ const userSchema = new Schema({
   active: {
     type: Boolean,
     default: false
-  },
-	avatar: {
-    type: String,
-    default:"https://www.nicepng.com/png/detail/301-3012856_account-user-profile-avatar-comments-free-image-user.png"
   }
-},{timestamp:true})
+},{timestamps:true})
 
 const User = model("User", userSchema);
 

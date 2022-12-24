@@ -4,50 +4,94 @@ import {MdEditLocationAlt} from 'react-icons/md'
 import {BsFillArrowLeftSquareFill} from 'react-icons/bs'
 import {BsFillArrowRightSquareFill} from 'react-icons/bs'
 import {RiImageEditFill} from 'react-icons/ri'
-import Reviews from './Sections/comments'
-import Earnings from './Sections/Earnings'
+import Reviews from './sections/read/comments'
+import Earnings from './sections/read/Earnings'
 import InterviewPanelSchedules from './PanelSchedules'
 import moment from 'moment'
 import {AiOutlineRight} from 'react-icons/ai'
 import {AiOutlineDown} from 'react-icons/ai'
 import {useCallback,useState,useEffect} from 'react'
 import {DataJSON} from './Data'
-import Slot from './Sections/Slot'
-import Topic from './Sections/Topic'
-import Tabs from './Sections/tabs'
-import INFO from './Sections/Infos'
-import UserPanelSchedule from './Sections/userPanelSchedule'
+import Slot from './sections/edit/Slot'
+import Topic from './sections/edit/Topic'
+import Tabs from './Utils/tabs'
+import INFO from './sections/edit/Infos'
+import UserPanelSchedule from './sections/edit/userPanelSchedule'
+import getUserInfo from './Hooks/getUserInfo'
+import useAuth from './useAuth'
+import axios from 'axios'
+import getSlots from './Hooks/getSlots'
+import getTopics from './Hooks/getTopics'
+
 
 
 
 
 export default function AdminPanel(){
 
+const {info,setInfo} = getUserInfo()
+const {slotData,setSlotData} = getSlots()
+const {topicData,setTopicData} = getTopics()
+
+const {auth} = useAuth()
 const [Data,setData] = useState(DataJSON)
-const [Info,setInfo] = useState(DataJSON.info)
-const [slotData,setSlotData] = useState(DataJSON.slotdata)
 const [slots,setSlots] =useState({time:"08:00"}) 
-const [topicData,setTopicData] = useState(DataJSON.topicdata)
 const [topics,setTopics] =useState("") 
 const [date, updateDate] = useState(moment(new Date()));
-const [expandTab , setExpandTab] = useState([true,false,false,false,false])
+const [expandTab , setExpandTab] = useState([true,false,false,false,false,false])
+const [loading,setLoading] = useState(false)
 
 
-useEffect(()=>{
+
+// useEffect(()=>{
     
 
-},[slotData,topicData])
+// },[slotData,topicData])
 
 //function for interviewr data------------------------------------- 
 function handleChangeInfo(e){
-  setInfo({...Info,[e.target.name]:e.target.value})
+  setInfo({...info,[e.target.name]:e.target.value})
 }
 
 
-function submitInfo(e){
+const isValidUrl = urlString=> {
+        var urlPattern = new RegExp('^(https?:\\/\\/)?'+ // validate protocol
+        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // validate domain name
+        '((\\d{1,3}\\.){3}\\d{1,3}))'+ // validate OR ip (v4) address
+        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // validate port and path
+        '(\\?[;&a-z\\d%_.~+=-]*)?'+ // validate query string
+        '(\\#[-a-z\\d_]*)?$','i'); // validate fragment locator
+      return !!urlPattern.test(urlString);
+    }
+
+async function submitInfo(e){
     e.preventDefault()
-    setData({...Data,info:Info})   
+    if(!info.website.includes('http')){
+        alert('please add http or https')
+        return
+    }
+    if(!isValidUrl(info.website)){
+        alert('please add a valid url')
+        return
+    }
+    try{
+        setLoading(true)
+        console.log('hello')
+        await axios.put(`/api/user/edit`,info,{
+           'headers':{
+                'Authorization':(auth.token ? auth.token : "")
+           }
+        }).then(res=>{
+            console.log(res.data)
+            setLoading(false)
+        })
+        setLoading(false)
+    }catch(err){
+        console.log(err)
+        setLoading(false)
+    }
 }
+
 
 
 // slot functions-------------------------------------------
@@ -56,12 +100,22 @@ function handleChangeSlotData(e){
 }
 
 
-function submitSlotData(e){
+async function submitSlotData(e){
   e.preventDefault()
   const hour = slots.time.split(":")
   const ConvertedTime = hour[0] > 12 ? (`${hour[0]-12}:${hour[1]} PM`) : hour[0]=== "12" ? (`${12}:${hour[1]} PM `) : hour[0]==="00" ? (`${12}:${hour[1]} AM `) : (`${hour[0]-0}:${hour[1]} AM`) 
-  setSlotData([...slotData,{...slots,booked:false,time:ConvertedTime,date:moment(slots.date).format("DD MMM YYYY")}])
-  setData({...Data,slotdata:slotData})
+  try{
+      await axios.post('api/slot/add',{time:ConvertedTime,date:moment(slots.date).format("DD MMM YYYY")},{
+        'headers':{
+            'Authorization':(auth.token ? auth.token : "")
+        }
+      }).then(res=>{
+        console.log(res.data)
+        setSlotData([...slotData,{...res.data}])
+      })
+  }catch(err){
+     console.log(err)
+  }
 }
 
 
@@ -79,20 +133,28 @@ function submitSlotData(e){
 
   
   
-  function deleteSlot(ind){
-     setSlotData(slotData.filter((s,i)=> i !== ind))
-     setData({...Data,slotdata:slotData})
 
-  }
 // topic functions---------------------------------------------
   function handleChangeTopicData(e){
      setTopics(e.target.value)
   }
 
-  function submitTopicData(e){
+ async function submitTopicData(e){
     e.preventDefault()
-     setTopicData([...topicData,topics])
-     setData({...Data,topicdata:topicData})
+    try{
+      await axios.post('api/topic/add',{title:topics},{
+        'headers':{
+            'Authorization':(auth.token ? auth.token : "")
+        }
+      }).then(res=>{
+        console.log(res.data)
+        setTopicData([...topicData,{...res.data}])
+      })
+    setTopics("")
+  }catch(err){
+     console.log(err)
+  }
+
   }
 
 
@@ -114,6 +176,10 @@ function submitSlotData(e){
      })
      setExpandTab(ex)
    }
+   if(!info.fullname){
+     return <>Loading...</>
+   }
+   // return null
 
 
 return(	
@@ -129,24 +195,26 @@ return(
 
 
 {/*---------------------------- data ----------------------------------*/}
-   <div className="border-b border-black py-5">
 
+
+
+          <div className="border-b border-black py-5">
           <Tabs 
                expand = {expand} 
                expandTab={expandTab} 
                title={"Details"} 
                tabIndex={0}
           />
-
-        <div className={`${expandTab[0]? "h-full":"h-0"} overflow-hidden transition-all`}>    
-            <INFO 
+          <div className={`${expandTab[0]? "h-full":"h-0"} overflow-hidden transition-all`}>    
+          <INFO 
                  Data={Data}
                  submitInfo={submitInfo}
                  handleChangeInfo={handleChangeInfo}
-                 Info={Info}
-             />
+                 Info={info}
+                 loading={loading}
+          />
          </div>
-        </div>
+         </div>
 
 
 
@@ -168,7 +236,9 @@ return(
                 submitTopicData={submitTopicData}
                 handleChangeTopicData={handleChangeTopicData}
                 topicData={topicData}
-                deleteTopic={deleteTopic} 
+                topics={topics}
+                setTopicData={setTopicData}
+                // deleteTopic={deleteTopic} 
             />
         </div>
         </div>
@@ -179,24 +249,26 @@ return(
 
 {/*-----------------------------------schedule--------------------------------------*/}
 {
-  Data.user_role ==="interviewer" ?
+  info.user.roles.includes("user") ?
           <div className="border-b border-black py-5">
           <Tabs 
                expand = {expand} 
                expandTab={expandTab} 
                title={"Add Slots"} 
                tabIndex={2}
+               loading={loading}
           />
           <div className={`${expandTab[2]? "h-full":"h-0"} overflow-hidden`}>
-              <Slot submitSlotData={submitSlotData} 
-                               handleChangeSlotData={handleChangeSlotData}
-                               decrementDate={decrementDate} 
-                               incrementDate={incrementDate} 
-                               slots={slots} 
-                               date={date} 
-                               slotData={slotData} 
-                               deleteSlot={deleteSlot} 
-              />
+          <Slot 
+               submitSlotData={submitSlotData} 
+               handleChangeSlotData={handleChangeSlotData}
+               decrementDate={decrementDate} 
+               incrementDate={incrementDate} 
+               slots={slots} 
+               date={date} 
+               slotData={slotData} 
+               setSlotData={setSlotData} 
+          />
           </div>
           </div>
           :
@@ -216,10 +288,21 @@ return(
                tabIndex={3}
              />
              <div className={`${expandTab[3]? "h-full":"h-0"} overflow-hidden`}>
-             {
-              Data.user_role ==="interviewer" ?
-                <InterviewPanelSchedules/>:<UserPanelSchedule/>
-             }
+                <InterviewPanelSchedules/>
+             </div>
+          </div>
+
+          <div className="border-b border-black py-5">        
+             <Tabs 
+               expand = {expand} 
+               expandTab={expandTab} 
+               title={"My Interviews"} 
+               tabIndex={4}
+             />
+             <div className={`${expandTab[4]? "h-full":"h-0"} overflow-hidden`}>
+
+               <UserPanelSchedule/>
+        
              </div>
           </div>
           
@@ -235,9 +318,9 @@ return(
                expand = {expand} 
                expandTab={expandTab} 
                title={"Earnings"} 
-               tabIndex={4}
+               tabIndex={5}
              />
-             <div className={`${expandTab[4]? "h-full":"h-0"} overflow-hidden`}>
+             <div className={`${expandTab[5]? "h-full":"h-0"} overflow-hidden`}>
                 <Earnings />
              </div>
          </div>
