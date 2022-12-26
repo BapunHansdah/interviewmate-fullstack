@@ -29,24 +29,20 @@ import getTopics from './Hooks/getTopics'
 
 export default function AdminPanel(){
 
-const {info,setInfo} = getUserInfo()
+const {info,setInfo,active,setActive,topicData,setTopicData} = getUserInfo()
 const {slotData,setSlotData} = getSlots()
-const {topicData,setTopicData} = getTopics()
-
 const {auth} = useAuth()
 const [Data,setData] = useState(DataJSON)
-const [slots,setSlots] =useState({time:"08:00"}) 
+const [slots,setSlots] =useState({time:"08:00",duration:30,price:0}) 
 const [topics,setTopics] =useState("") 
 const [date, updateDate] = useState(moment(new Date()));
-const [expandTab , setExpandTab] = useState([true,false,false,false,false,false])
+const [expandTab , setExpandTab] = useState([false,false,false,false,false,false])
 const [loading,setLoading] = useState(false)
+const [searchText,setSearchText] = useState("")
+const [topicRecommandation,setTopicRecommandation] = useState([{id:1,title:"frontend"},{id:2,title:"backend"},{id:3,title:"fullstack"},{id:4,title:"business"}])
+ 
 
-
-
-// useEffect(()=>{
-    
-
-// },[slotData,topicData])
+// console.log(info)
 
 //function for interviewr data------------------------------------- 
 function handleChangeInfo(e){
@@ -105,7 +101,7 @@ async function submitSlotData(e){
   const hour = slots.time.split(":")
   const ConvertedTime = hour[0] > 12 ? (`${hour[0]-12}:${hour[1]} PM`) : hour[0]=== "12" ? (`${12}:${hour[1]} PM `) : hour[0]==="00" ? (`${12}:${hour[1]} AM `) : (`${hour[0]-0}:${hour[1]} AM`) 
   try{
-      await axios.post('api/slot/add',{time:ConvertedTime,date:moment(slots.date).format("DD MMM YYYY")},{
+      await axios.post('api/slot/add',{time:ConvertedTime,date:moment(slots.date).format("DD MMM YYYY"),...slots},{
         'headers':{
             'Authorization':(auth.token ? auth.token : "")
         }
@@ -117,6 +113,8 @@ async function submitSlotData(e){
      console.log(err)
   }
 }
+
+console.log(slotData)
 
 
 // function to change dates in slot---------------------------------
@@ -139,30 +137,44 @@ async function submitSlotData(e){
      setTopics(e.target.value)
   }
 
- async function submitTopicData(e){
-    e.preventDefault()
+ async function submitTopicData(title){
     try{
-      await axios.post('api/topic/add',{title:topics},{
+      await axios.put('/api/user/addtopic',{title:title},{
         'headers':{
             'Authorization':(auth.token ? auth.token : "")
         }
       }).then(res=>{
-        console.log(res.data)
-        setTopicData([...topicData,{...res.data}])
+        console.log(res.data.topic[res.data.topic.length-1])
+        setTopicData([...topicData,{...res.data.topic[res.data.topic.length-1]}])
       })
     setTopics("")
   }catch(err){
      console.log(err)
   }
 
+  console.log(topicData)
+  //   e.preventDefault()
+  //   try{
+  //     await axios.post('api/topic/add',{title:topic},{
+  //       'headers':{
+  //           'Authorization':(auth.token ? auth.token : "")
+  //       }
+  //     }).then(res=>{
+  //       console.log(res.data)
+  //       setTopicData([...topicData,{...res.data}])
+  //     })
+  //   setTopics("")
+  // }catch(err){
+  //    console.log(err)
+  // }
+
   }
 
 
 
-  function deleteTopic(ind){
-     setTopicData(topicData.filter((s,i)=> i !== ind))
-     setData({...Data,topicdata:topicData})
-  }
+  // function deleteTopic(ind){
+     
+  // }
   
 
 // tab functions---------------------------------------------------
@@ -176,10 +188,33 @@ async function submitSlotData(e){
      })
      setExpandTab(ex)
    }
+
+
+   async function activeUser(e){
+    e.preventDefault()
+    try{
+      await axios.put('api/user/active',{active:e.target.checked},{
+        'headers':{
+            'Authorization':(auth.token ? auth.token : "")
+        }
+      }).then(res=>{
+         console.log(res.data)
+         setActive(res.data.active)
+      })
+  }catch(err){
+     console.log(err)
+  }
+
+  }
+
+
+
    if(!info.fullname){
      return <>Loading...</>
    }
    // return null
+
+
 
 
 return(	
@@ -187,10 +222,19 @@ return(
 
 
 {/*---------------------------profile picture------------------------*/}
-    <div className="flex gap-2 cursor-pointer">
+    <div className="flex gap-2 cursor-pointer justify-between">
+       <div className="flex  gap-2">
         <img className="w-20" src="https://www.nicepng.com/png/detail/301-3012856_account-user-profile-avatar-comments-free-image-user.png"/>
         <div className="flex items-center"><span className="text-lg text-center"><RiImageEditFill/></span></div>
+       </div>
+       <div className="font-semibold gap-2">
+          <div className="p-2 border shadow">
+            <input className="cursor-pointer" type="checkbox" name="active" id="active" checked={active} onChange={activeUser}/>
+            <label className="cursor-pointer" htmlFor="active"> Active</label>
+          </div>
+       </div>
     </div>
+
 
 
 
@@ -220,8 +264,7 @@ return(
 
 
 {/*---------------------------add topic-------------------------------------------*/}
-{
-  Data.user_role ==="interviewer" ?
+
           <div className="border-b border-black py-5">
 
           <Tabs 
@@ -238,18 +281,17 @@ return(
                 topicData={topicData}
                 topics={topics}
                 setTopicData={setTopicData}
+                topicRecommandation={topicRecommandation}
                 // deleteTopic={deleteTopic} 
             />
         </div>
         </div>
-        :
-          <></>
-}
+
 
 
 {/*-----------------------------------schedule--------------------------------------*/}
 {
-  info.user.roles.includes("user") ?
+  info.role === "interviewer" ?
           <div className="border-b border-black py-5">
           <Tabs 
                expand = {expand} 
@@ -280,6 +322,7 @@ return(
 
 {/*--------------------------------slot list ----------------------------------------------*/}
 
+{info.role === "interviewer" ?
           <div className="border-b border-black py-5">        
              <Tabs 
                expand = {expand} 
@@ -288,20 +331,25 @@ return(
                tabIndex={3}
              />
              <div className={`${expandTab[3]? "h-full":"h-0"} overflow-hidden`}>
-                <InterviewPanelSchedules/>
+
+               <InterviewPanelSchedules/>
+        
              </div>
-          </div>
+          </div>:
+          <></>
+      }
+
 
           <div className="border-b border-black py-5">        
              <Tabs 
                expand = {expand} 
                expandTab={expandTab} 
-               title={"My Interviews"} 
+               title={"Interviews"} 
                tabIndex={4}
              />
              <div className={`${expandTab[4]? "h-full":"h-0"} overflow-hidden`}>
 
-               <UserPanelSchedule/>
+              <UserPanelSchedule/>
         
              </div>
           </div>
@@ -312,15 +360,15 @@ return(
 {/*------------------------------------ earnings------------------------------------*/}
 
 {
-  Data.user_role ==="interviewer" ?
+  info.role ==="interviewer" ?
           <div className="border-b border-black py-5">
              <Tabs 
                expand = {expand} 
                expandTab={expandTab} 
                title={"Earnings"} 
-               tabIndex={5}
+               tabIndex={4}
              />
-             <div className={`${expandTab[5]? "h-full":"h-0"} overflow-hidden`}>
+             <div className={`${expandTab[4]? "h-full":"h-0"} overflow-hidden`}>
                 <Earnings />
              </div>
          </div>

@@ -31,3 +31,53 @@ export const editUser =async (req,res,next)=>{
      }
 }
 
+
+export const activeUser =async (req,res,next)=>{
+     const {id} =req.user
+     const {active} =req.body
+     try{
+     	const user = await Info.findOne({user:id})
+     	if(!user){
+     		return res.status(404).json("user not found")
+     	}
+     	const updateUser = await Info.findOneAndUpdate({user:id},{active},{new:true})
+
+          return res.status(200).json(updateUser);
+     }catch(err){
+     	next(err)
+     }
+}
+
+export const addTopic =async (req,res,next)=>{
+     const {id} =req.user
+     const {title} =req.body
+     try{
+     	const user = await Info.findOne({user:id})
+     	if(!user){
+     		return res.status(404).json("user not found")
+     	}
+     	const updateUser = await Info.findOneAndUpdate({user:id},{$push:{"topic":[{title}]}},{new:true})
+
+          return res.status(200).json(updateUser);
+     }catch(err){
+     	next(err)
+     }
+}
+
+export const deleteTopic =async (req,res,next)=>{
+     const {id} =req.user
+     const {ID} =req.params
+     // console.log(ID)
+     try{
+     	const user = await Info.findOne({user:id})
+     	if(!user){
+     		return res.status(404).json("user not found")
+     	}
+     	const updateUser = await Info.findOneAndUpdate({user:id},{$pull:{"topic":{"_id":ID}}},{new:true})
+
+          return res.status(200).json(updateUser);
+     }catch(err){
+     	next(err)
+     }
+}
+

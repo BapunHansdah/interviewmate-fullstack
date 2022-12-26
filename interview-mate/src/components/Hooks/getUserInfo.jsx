@@ -6,6 +6,9 @@ export default ()=>{
  const [info,setInfo] = useState({})
  const [loading,setLoading] = useState(true)
  const {auth} = useAuth()
+ const [topicData,setTopicData] = useState([])
+ const [active,setActive] = useState(false)
+
 
 async function getUserData(){
      setLoading(true)
@@ -17,6 +20,8 @@ async function getUserData(){
                 }
              }).then(res=>{
                  setInfo(res.data)
+                 setTopicData(res.data.topic)
+                 setActive(res.data.active)
                  setLoading(false)
              })
            }
@@ -29,6 +34,6 @@ async function getUserData(){
     getUserData()
  },[auth.token])
 
- return {info,setInfo,loading,auth}
+ return {info,setInfo,loading,auth,active,setActive,topicData,setTopicData}
 
 }

@@ -21,10 +21,6 @@ const userSchema = new Schema({
 		required:true,
 		min:6
 	},
-	roles: {
-    type: [String],
-    default: ["user"]
-  },
   active: {
     type: Boolean,
     default: false

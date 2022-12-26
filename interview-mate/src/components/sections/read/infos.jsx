@@ -16,6 +16,9 @@ export default function Info({info}){
 						      <div className="">
 				                 <img className="w-20" src={info.avatar}/>
 			                  </div>
+			                  <div>
+			                     <span className="bg-red-500 text-white px-1 rounded">{info.role}</span>
+			                  </div>
 						      <h3 className="font-bold cursor-pointer hover:text-gray-800">{info.fullname}</h3>
 			                   <div className="flex flex-col sm:grid sm:grid-cols-2  gap-1 sm:gap-4">
 			                      <div className="font-bold text-xs">{info.user.username}</div>

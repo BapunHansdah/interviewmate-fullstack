@@ -1,18 +1,20 @@
 import {AiFillStar} from 'react-icons/ai'
-import {Link} from 'react-router-dom'
 import {AiOutlineSchedule} from 'react-icons/ai'
 import axios from 'axios'
 import TopicArr from './topicArr'
 import {useState,useEffect} from 'react'
-export default function InterviewerPost(){
+import {Link,useNavigate} from 'react-router-dom'
 
-	const [profileData,setProfileData] = useState([])
-	const [loading,setLoading] = useState(true)
+
+export default function InterviewerPost({query}){
+
+const [profileData,setProfileData] = useState([])
+const [loading,setLoading] = useState(true)
 
 async function getProfileData(){
 	   setLoading(true)
         try{
-             await axios.get('/api/public/feed').then(res=>{
+             await axios.get(`/api/public/feed/${query}`).then(res=>{
                   setProfileData(res.data)
                   setLoading(false)
              })
@@ -24,18 +26,22 @@ async function getProfileData(){
  useEffect(()=>{
     getProfileData()
  },[])
-
+  console.log(profileData)
   if(loading){
   	return <>loading...</>
   }
+  console.log(profileData)
+  // return null
 
 	return(	
-		profileData.map((m,i)=>{
+		<>
+		{
+     profileData.map((m,i)=>{
 			return (
 
 				   <div className="p-5 border shadow bg-white" key={m._id}>
          <div className="flex w-full justify-between">
-           <div className="flex gap-2 item-center ">
+           <div className="flex flex-col md:flex-row gap-2 item-center ">
                 <div className="">
 			             <img className="w-20" src="https://www.nicepng.com/png/detail/301-3012856_account-user-profile-avatar-comments-free-image-user.png"/>
 		            </div>
@@ -60,7 +66,7 @@ async function getProfileData(){
           </div>
           <div className="text-xs flex flex-wrap gap-1 mt-2">
       
-          	<TopicArr id={m.user._id} name={"topic"}/>
+          	<TopicArr topic={m.topic} />
          
           </div>
           <div className="w-full mt-2">
@@ -69,6 +75,9 @@ async function getProfileData(){
 		</div>
 
 				)
-		})
+		}) 
+	}
+</>
 	)
+
 }

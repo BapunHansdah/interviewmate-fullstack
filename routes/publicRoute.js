@@ -5,7 +5,7 @@ const router = express.Router()
 
 // router.post('/add',addSlot)
 router.get('/profile/:name',getSingleUser)
-router.get('/feed',getPublicProfiles)
+router.get('/feed/:topic',getPublicProfiles)
 router.get('/topic/:ID',getPublicTopics)
 
 

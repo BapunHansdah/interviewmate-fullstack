@@ -24,6 +24,25 @@ const infoSchema = new Schema({
 	website:{
 		type:String
 	},
+	role:{
+		type:String,
+		default:"user"
+	},
+	price:{
+		type:Number,
+		default:0
+	},
+	active:{
+        type:Boolean,
+        default:false
+	},
+	topic:[
+	  {
+	  	title:{
+	  		type:String
+	  	}
+	  }
+	],
 	avatar: {
         type: String,
         default:"https://www.nicepng.com/png/detail/301-3012856_account-user-profile-avatar-comments-free-image-user.png"

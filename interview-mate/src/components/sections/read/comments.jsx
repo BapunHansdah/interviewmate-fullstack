@@ -2,26 +2,30 @@ import {AiFillStar} from 'react-icons/ai'
 import {Link} from 'react-router-dom'
 
 
-export default function Comments({reviewData}){
-
-    // console.log(reviewData)
+export default function Comments({info}){
+    
+    console.log(info)
+   function refreshPage() {
+     // window.location.reload(false);
+     // return ;
+  }
 	return(
            <div className="mt-5">
             <h2 className="text-2xl">Reviews</h2>
              <div className="border p-2 flex flex-col gap-2 mt-4">
              {
-                reviewData.map((r,i)=>{
+                info.map((r,i)=>{
                     return (
 
-                         <div className="border p-2" key={i}>
+                         <div className="border p-2" key={r._id}>
 
                             <div className="flex gap-2 flex-col ">
 
                 <div className="flex gap-2">
                      <div><img className="w-10" src="https://www.nicepng.com/png/detail/301-3012856_account-user-profile-avatar-comments-free-image-user.png"/></div>
                     <div>
-                       <h1 className="font-semibold "><Link to="/profile">{r.by}</Link></h1>
-                       <div className="flex items-center gap-2 text-sm text-gray-800">{r.rating}<AiFillStar style={{color:"yellow"}}/><AiFillStar/><AiFillStar/><AiFillStar/><AiFillStar/></div>
+                       <h1 className="font-semibold " onClick={refreshPage}><Link to={`/profile/${r.bookedBy.username}`}>{r.bookedBy.username}</Link></h1>
+                       <div className="flex items-center gap-2 text-sm text-gray-800">{r.rating}<AiFillStar style={{color:"yellow"}}/>  </div>
                     </div>
                 </div>
 

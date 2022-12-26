@@ -7,11 +7,18 @@ import moment from 'moment'
 import List from '../../Utils/list'
 
 export default function InterviewerSlot({loading,submitSlotData,handleChangeSlotData,decrementDate,incrementDate,slots,date,slotData,deleteSlot,setSlotData}){
+
     return(
          <>
-          <form onSubmit={submitSlotData} className="w-full my-5 flex flex-col sm:flex-row gap-2">
-             <input onChange={handleChangeSlotData}  className="border border-black" value={moment(slots.date).format("YYYY-MM-DD")} type="date" min={moment(new Date()).format("YYYY-MM-DD")} id="birthday" name="date" required={true}/>
-             <input onChange={handleChangeSlotData} className="border border-black" value={slots.time} type="time" id="appt"  name="time" required={true}/>
+          <form onSubmit={submitSlotData} className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+             <label>Date</label>
+             <input onChange={handleChangeSlotData}  className="border border-black px-2 py-1" value={moment(slots.date).format("YYYY-MM-DD")} type="date" min={moment(new Date()).format("YYYY-MM-DD")} id="birthday" name="date" required={true}/>
+             <label>Time</label>
+             <input onChange={handleChangeSlotData} className="border border-black px-2 py-1" value={slots.time} type="time" id="appt"  name="time" required={true}/>
+             <label>Price</label>
+             <input onChange={handleChangeSlotData}  className="border border-black px-2 py-1" type="number" min="0" value={slots.price} placeholder="Price in inr" name="price"/>
+             <label>Duration</label>
+             <input onChange={handleChangeSlotData}  className="border border-black px-2 py-1" type="number" min="15"  value={slots.duration} placeholder="Duration in min" name="duration"/>
              <button className="p-1 text-white bg-black flex items-center justify-center gap-2 hover:bg-opacity-80"><AiOutlineSchedule/>Add Schedule</button>
           </form>
               <List data={slotData} date={date} setData={setSlotData} name={"slot"}/>

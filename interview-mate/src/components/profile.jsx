@@ -13,7 +13,7 @@ import Slot from './sections/intract/abc'
 import getTopics from './Hooks/getTopics'
 import getSlots from './Hooks/getSlots'
 import {useParams} from 'react-router-dom'
-
+// import { Button, Header, Image, Modal } from 'semantic-ui-react'
 
 
 export default function InterviewerPost(){
@@ -21,38 +21,47 @@ export default function InterviewerPost(){
 const {name} = useParams()
 
 
+
 const [profileData,setProfileData] = useState({})
+const [loading,setLoading] = useState(true)
 
 async function getProfileData(){
         try{
              await axios.get(`/api/public/profile/${name}`).then(res=>{
+                  console.log(res.data)
+                  setLoading(false)
                   setProfileData(res.data)
              })
         }catch(err){
             console.log(err)
+            setLoading(false)
         }
      }
  useEffect(()=>{
     getProfileData()
- },[])
+ },[name])
 
 
 
 
   
-  if(profileData.user === undefined){
+  if(loading){
      return <>Loading..</>
   }
 
+  console.log(profileData)
+
+  // return null
 
 	return(	
 		<div className="p-5 border shadow max-w-[1000px] mx-auto bg-white mt-10">
-           <Infos info={profileData.info}/>
-           <Topic info={profileData.topic}/>
+          <Infos info={profileData.info}/>
+          <Topic info={profileData.info.topic}/>
          {
-         profileData.user.roles.includes("user") ?
-           <Slot info={profileData.slot}/>:<></>
+         profileData.info.role==="interviewer" ?
+           <Slot info={profileData.slot} bio={profileData.info} topic={profileData.info.topic}/>:<></>
          }
+         <Reviews info={profileData.slot}/>
 		</div>
 	)
 }

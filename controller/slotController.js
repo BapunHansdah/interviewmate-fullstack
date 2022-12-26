@@ -7,7 +7,7 @@ import jwt from 'jsonwebtoken'
 
 export const addSlot= async (req,res,next)=>{
 	const {id} = req.user
-	const {time,date} = req.body
+	const {time,date,price,duration} = req.body
 
 	if(!time){
 		return res.status(403).json("add time")
@@ -18,7 +18,7 @@ export const addSlot= async (req,res,next)=>{
 
 	try{
 		 const newSlot = await new Slot({
-		 	time,date,by:id
+		 	time,date,by:id,price,duration
 		 })
 		 await newSlot.save()
 	      return res.status(200).json(newSlot);
@@ -51,16 +51,20 @@ export const deleteSlot= async (req,res,next)=>{
 export const scheduleSlot= async (req,res,next)=>{
 	const {id} = req.user
 	const {ID} = req.params
-	const {booked} = req.body
+	const {booked,by,topic} = req.body
 
 	try{
 		 if(!id){
-		 return res.status(200).json("login first");
+		 return res.status(403).json("login first");
          }
          if(!ID){
-		 return res.status(200).json("Invalid slot");
+		 return res.status(403).json("Invalid slot");
          }
-	 	 const updateSlot = await Slot.findOneAndUpdate({_id:ID},{booked:booked,bookedBy:id},{new:true})
+         if(id===by){
+		    return res.status(403).json("you can't interview your self");
+         }
+
+	 	 const updateSlot = await Slot.findOneAndUpdate({_id:ID},{booked:booked,bookedBy:id,topic:topic},{new:true})
 	     return res.status(200).json(updateSlot);
 	}catch(err){
 		next(err)
@@ -117,7 +121,15 @@ export const approvedSlots= async (req,res,next)=>{
 export const completeSlot= async (req,res,next)=>{
 	const {id} = req.user
 	const {ID} = req.params
-	const {completed} = req.body
+	const {completed,rating,by,review} = req.body
+
+	if(id===by){
+		    return res.status(403).json("you can't approve your self");
+     }
+     if(rating===0){
+		    return res.status(403).json("give atleast star rating");	   
+     }
+
 
 	try{
 		 if(!id){
@@ -126,7 +138,7 @@ export const completeSlot= async (req,res,next)=>{
          if(!ID){
 		 return res.status(200).json("Invalid slot");
          }
-	 	 const updateSlot = await Slot.findOneAndUpdate({_id:ID},{completed:completed},{new:true})
+	 	 const updateSlot = await Slot.findOneAndUpdate({_id:ID},{completed:completed,rating,review},{new:true})
 	     return res.status(200).json(updateSlot);
 	}catch(err){
 		next(err)

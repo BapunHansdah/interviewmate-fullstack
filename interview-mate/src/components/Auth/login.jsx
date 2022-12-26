@@ -1,5 +1,5 @@
 import {Link} from 'react-router-dom'
-import {useState} from 'react'
+import {useState,useEffect} from 'react'
 import axios from 'axios'
 import {useDispatch} from 'react-redux'
 import {useNavigate,Navigate} from 'react-router-dom'
@@ -28,14 +28,14 @@ function Login(){
 
 
 
-   function refreshPage() {
+ function refreshPage() {
      window.location.reload(false);
      return ;
   }
 
    // useEffect(()=>{
-     
-   // },[auth.isLoggedIn])
+   //   refreshPage()
+   // },[])
 
     if(loading){
        return <>loading</>

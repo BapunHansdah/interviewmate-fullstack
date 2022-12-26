@@ -10,7 +10,8 @@ export const register =async (req,res,next)=>{
 
 	try{
 		    // check field
-	        const {username,email,password} = req.body
+	        const {username,email,password,role} = req.body
+
         	
         	//check fields
         	if(!username || !email || !password ){
@@ -39,7 +40,7 @@ export const register =async (req,res,next)=>{
 	        const hashPassword = await bcrypt.hash(password,salt)
 
 	         // create token
-     		const newUser = { username, email, password: hashPassword };
+     		const newUser = { username, email, password: hashPassword ,role };
       		const activation_token = createToken.activation(newUser);
 
       		const url = `http://localhost:4000/api/auth/activate/${activation_token}`;
@@ -58,7 +59,9 @@ export const activate = async (req,res,next) =>{
 	try{
 			const {activation_token} = req.params
 			const user = jwt.verify(activation_token,process.env.ACTIVATION_TOKEN)
-			const {username,email,password} = user
+			const {username,email,password,role} = user
+
+			console.log(role)
 
 			//check if email or username already exist
 			const USERNAME = await User.findOne({username})
@@ -86,7 +89,9 @@ export const activate = async (req,res,next) =>{
 		    			fullname:email.substring(0,email.indexOf('@')),
 		    	        location:'',
 		    	        bio:'',
-		    	        website:''
+		    	        website:'',
+		    	        role:role,
+		    	        topic:[]
 		    		}) 
 		    		newInfo.save(err=>{
 		    			if(err){
@@ -166,3 +171,15 @@ export const access = async (req,res,next)=>{
 	}
 	
 }
+
+export const signout = async (req,res,next)=>{
+    try {
+      // clear cookie
+      res.clearCookie("_apprftoken", { path: "/api/auth/access" });
+      res.clearCookie("project_token")
+      // success
+      return res.status(200).json({ msg: "Signout success." });
+    } catch (err) {
+      return next(err)
+    }
+  }

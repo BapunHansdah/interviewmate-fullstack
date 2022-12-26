@@ -36,9 +36,29 @@ const slotSchema = new Schema({
 		default:"26 Nov 2022",
 		required:true
 	},
+	topic:[
+	  {
+	  	title:{
+	  		type:String
+	  	}
+	  }
+	],
 	approved:{
 		type:Boolean,
 		default:false
+	},
+	rating:{
+		type:Number,
+		default:0,
+		max:5
+	},
+	duration:{
+		type:Number,
+		default:30
+	},
+	review:{
+		type:String,
+		default:""
 	},
 	completed:{
 		type:Boolean,

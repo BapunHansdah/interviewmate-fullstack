@@ -13,11 +13,11 @@ export const getSingleUser =async (req,res,next)=>{
      	if(!name){
      		return res.status(404).json("user not found")
      	}
-     	const user = await User.findOne({username:name}).select('username roles')
-          const info = await Info.findOne({user:user.id}).populate({path:'user',select:'username email roles'})
-          const slot = await Slot.find({by:user.id})
+     	const user = await User.findOne({username:name}).select('username')
+          const info = await Info.findOne({user:user.id}).populate({path:'user',select:'username email'})
+          const slot = await Slot.find({by:user.id}).populate({path:'bookedBy',select:'username email'})
           const topic = await Topic.find({by:user.id})
-          return res.status(200).json({user,info,slot,topic});
+          return res.status(200).json({info,slot,topic});
      }catch(err){
      	next(err)
      }
@@ -25,9 +25,11 @@ export const getSingleUser =async (req,res,next)=>{
 
 
 export const getPublicProfiles =async (req,res,next)=>{
+
+     const {topic} = req.params
      
      try{
-          const user = await Info.find().populate({path:"user",select:"username"}).select("fullname location bio avatar")
+          const user = await Info.find({role:"interviewer",active:true,topic:{$elemMatch:{title:topic}}}).populate({path:"user",select:"username"}).select("fullname location bio avatar topic")
           return res.status(200).json(user);
      }catch(err){
           next(err)

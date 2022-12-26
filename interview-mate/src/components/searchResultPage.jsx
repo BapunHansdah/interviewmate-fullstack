@@ -1,6 +1,7 @@
-import react from 'react'
+import react,{useState,useEffect} from 'react'
+import axios from 'axios'
 import '../index.css'
-import {Link} from 'react-router-dom'
+import {Link,useParams} from 'react-router-dom'
 import {AiOutlineRight} from 'react-icons/ai'
 import {AiOutlineDown} from 'react-icons/ai'
 import {BsFillFilterSquareFill} from 'react-icons/bs'
@@ -11,11 +12,17 @@ import InterviewerPost from './interviewerPost'
 import HeroSection from './herosections'
 
 function SearchResult(){
+ 
+const [profileData,setProfileData] = useState([])
+const [loading,setLoading] = useState(true)
+const {query} = useParams()
+
+
 	return(	
 		<div className="max-w-[1440px] mx-auto">
 
              <div className="max-w-[1200px] flex flex-col justify-center lg:flex-row mx-auto gap-5 mt-10">
-                       <div className="hidden  lg:w-3/12">
+                       <div className="  lg:w-3/12">
                           
                        </div>
                        <div className="lg:w-9/12 flex justify-between bg-white p-2 border">
@@ -26,7 +33,7 @@ function SearchResult(){
              </div>      
              <div className="max-w-[1200px]  flex flex-col justify-center lg:flex-row mx-auto gap-5 mt-2">
 {/*------------------------------------interviewer search ---------------------------------*/}                      
-                       <div className="hidden lg:w-3/12 z-10">
+                       <div className="lg:w-3/12 z-10">
 
                            <div className="p-2 flex flex-col lg:flex-col justify-start shadow bg-white mb-5">
                              <h1 className="text-xl  text-center font-semibold mb-2">Search Your Topic</h1>
@@ -45,19 +52,19 @@ function SearchResult(){
                              <div className="flex flex-col gap-2">
 
                                 <div className="flex gap-2 items-center">
-                                    <input type="radio" id="3" name="fav_language" value="HTML"/>
+                                    <input type="radio" id="3"/>
                                     <label htmlFor="html">4.5 and Up</label>
                                  </div>
                                  <div className="flex gap-2 items-center">
-                                    <input type="radio" id="2" name="fav_language" value="CSS"/>
+                                    <input type="radio" id="2" />
                                     <label htmlFor="css">4.0 and Up</label>
                                  </div>
                                  <div className="flex gap-2 items-center">
-                                     <input type="radio" id="1" name="fav_language" value="JavaScript"/>
+                                     <input type="radio" id="1"/>
                                      <label htmlFor="javascript">3.5 and Up</label>
                                   </div>
                                   <div className="flex gap-2 items-center">
-                                     <input type="radio" id="0" name="fav_language" value="JavaScript"/>
+                                     <input type="radio" id="0"/>
                                      <label htmlFor="javascript">2.5 and Up</label>
                                   </div>
                              </div>
@@ -70,19 +77,19 @@ function SearchResult(){
                              <div className="flex flex-col gap-2 hidden">
 
                                 <div className="flex gap-2 items-center">
-                                    <input type="checkbox" id="Beginner" name="fav_language" value="HTML"/>
+                                    <input type="checkbox" id="Beginner"/>
                                     <label htmlFor="html">Beginner</label>
                                  </div>
                                  <div className="flex gap-2 items-center">
-                                    <input type="checkbox" id="Intermediate" name="fav_language" value="CSS"/>
+                                    <input type="checkbox" id="Intermediate"/>
                                     <label htmlFor="css">Intermediate</label>
                                  </div>
                                  <div className="flex gap-2 items-center">
-                                     <input type="checkbox" id="Export" name="fav_language" value="JavaScript"/>
+                                     <input type="checkbox" id="Export"/>
                                      <label htmlFor="javascript">Export</label>
                                   </div>
                                   <div className="flex gap-2 items-center">
-                                     <input type="checkbox" id="Alllevels" name="fav_language" value="JavaScript"/>
+                                     <input type="checkbox" id="Alllevels"/>
                                      <label htmlFor="javascript">All levels</label>
                                   </div>
                              </div>
@@ -95,7 +102,7 @@ function SearchResult(){
                              <div className="flex flex-col gap-2">
 
                                 <div className="flex gap-2 items-center hidden">
-                                    <input type="range" id="3" name="range" value=""/>
+                                    <input type="range" id="3" name="range"/>
                                     <label htmlFor="range">4.5 and Up</label>
                                  </div>
                              </div>
@@ -106,10 +113,7 @@ function SearchResult(){
 
 {/*---------------------------------interviewer profiles--------------------------*/}
                   <div className="flex flex-col w-full lg:w-9/12 gap-10">
-	                   <InterviewerPost />
-	                   <InterviewerPost />
-	                   <InterviewerPost />
-	                   <InterviewerPost />
+	                   <InterviewerPost query={query}/>
                       <div className="text-center"><button className="bg-black text-white py-1 px-2">Load More</button></div>
                    </div>
 {/*------------------------------------right bar for sign up--------------------------------------*/}
