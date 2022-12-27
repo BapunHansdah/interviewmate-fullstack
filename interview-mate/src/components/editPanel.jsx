@@ -144,7 +144,8 @@ console.log(slotData)
             'Authorization':(auth.token ? auth.token : "")
         }
       }).then(res=>{
-        console.log(res.data.topic[res.data.topic.length-1])
+         // console.log(res.data)
+        // console.log(res.data.topic[res.data.topic.length-1])
         setTopicData([...topicData,{...res.data.topic[res.data.topic.length-1]}])
       })
     setTopics("")
@@ -152,29 +153,9 @@ console.log(slotData)
      console.log(err)
   }
 
-  console.log(topicData)
-  //   e.preventDefault()
-  //   try{
-  //     await axios.post('api/topic/add',{title:topic},{
-  //       'headers':{
-  //           'Authorization':(auth.token ? auth.token : "")
-  //       }
-  //     }).then(res=>{
-  //       console.log(res.data)
-  //       setTopicData([...topicData,{...res.data}])
-  //     })
-  //   setTopics("")
-  // }catch(err){
-  //    console.log(err)
-  // }
+  // console.log(topicData)
 
   }
-
-
-
-  // function deleteTopic(ind){
-     
-  // }
   
 
 // tab functions---------------------------------------------------

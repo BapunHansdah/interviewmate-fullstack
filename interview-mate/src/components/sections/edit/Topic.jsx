@@ -7,9 +7,7 @@ export default function InterviewerTopic({topicRecommandation,submitTopicData,ha
      const {auth} = useAuth()
     
 
-    console.log(topicData)
     async function deleteTopic(id){
-        console.log(id)
      try{
         await axios.delete(`/api/user/deletetopic/${id}`,{
             'headers':{
@@ -59,11 +57,6 @@ export default function InterviewerTopic({topicRecommandation,submitTopicData,ha
             } 
             </div>             
           </div>
-          {/*<div>
-              Your recommand topics
-             <input onChange={handleChangeRecommandTopicData} placeholder="Search topics" className="border border-black px-2 py-1 w-full" value={topicsRecommanded}/>
-          </div>*/}
-          {/*<List data={topicData} name="topic" setData={setTopicData}/>*/}
 	</div>
         )
 

@@ -61,7 +61,7 @@ async function getProfileData(){
          profileData.info.role==="interviewer" ?
            <Slot info={profileData.slot} bio={profileData.info} topic={profileData.info.topic}/>:<></>
          }
-         <Reviews info={profileData.slot}/>
+         <Reviews info={profileData.review}/>
 		</div>
 	)
 }

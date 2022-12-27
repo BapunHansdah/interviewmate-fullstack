@@ -88,7 +88,8 @@ const bg = {
              }
              })
              setAvailSlot(selectSlot) 
-             setOpen(false)          
+             setOpen(false) 
+             setTopicSelected([])         
         }catch(err){
              console.log(err)
         }

@@ -15,9 +15,9 @@ export const getSingleUser =async (req,res,next)=>{
      	}
      	const user = await User.findOne({username:name}).select('username')
           const info = await Info.findOne({user:user.id}).populate({path:'user',select:'username email'})
-          const slot = await Slot.find({by:user.id}).populate({path:'bookedBy',select:'username email'})
-          const topic = await Topic.find({by:user.id})
-          return res.status(200).json({info,slot,topic});
+          const slot = await Slot.find({by:user.id})
+          const review = await Slot.find({by:user.id,rating:{$gt:0}}).populate({path:'bookedBy',select:'username'})
+          return res.status(200).json({info,slot,review});
      }catch(err){
      	next(err)
      }
