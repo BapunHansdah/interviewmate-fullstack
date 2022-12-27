@@ -43,7 +43,7 @@ export const register =async (req,res,next)=>{
      		const newUser = { username, email, password: hashPassword ,role };
       		const activation_token = createToken.activation(newUser);
 
-      		const url = `http://localhost:4000/api/auth/activate/${activation_token}`;
+      		const url = `https://interviewmates.onrender.com/api/auth/activate/${activation_token}`;
             sendEmailRegister(email, url, "Verify your email");
 
             return res.status(200).json({ msg: "Welcome! Please check your email." });	
