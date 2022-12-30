@@ -9,8 +9,12 @@ export const addTopic= async (req,res,next)=>{
 	const {id} = req.user
 	const {title} = req.body
 
+	if(!id){
+		return res.status(401).json({msg:"Login Again !!"})
+	}
+
 	if(!title){
-		return res.status(403).json("can't be empty")
+		return res.status(403).json({msg:"can't be empty"})
 	}
 
 
@@ -41,7 +45,7 @@ export const deleteTopic= async (req,res,next)=>{
 
 	try{
 		const slots = await Topic.deleteOne({_id:ID,by:id})
-	     return res.status(200).json(slots);
+	     return res.status(200).json({msg:"Topic deleted successfully"});
 	}catch(err){
 		next(err)
 	}

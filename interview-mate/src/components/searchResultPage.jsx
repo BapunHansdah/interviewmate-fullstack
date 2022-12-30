@@ -2,10 +2,16 @@ import react,{useState,useEffect} from 'react'
 import axios from 'axios'
 import '../index.css'
 import {Link,useParams} from 'react-router-dom'
-import {AiOutlineRight} from 'react-icons/ai'
-import {AiOutlineDown} from 'react-icons/ai'
+// import {AiOutlineRight} from 'react-icons/ai'
+// import {AiOutlineDown} from 'react-icons/ai'
 import {BsFillFilterSquareFill} from 'react-icons/bs'
 import {FaSortAmountDown} from 'react-icons/fa'
+import Rating from './Filter/rating'
+import Level from './Filter/level'
+import Price from './Filter/price'
+import Search from './Filter/search'
+import Tab from './Utils/tabs'
+
 
 
 import InterviewerPost from './interviewerPost'
@@ -16,6 +22,20 @@ function SearchResult(){
 const [profileData,setProfileData] = useState([])
 const [loading,setLoading] = useState(true)
 const {query} = useParams()
+const [expandTab , setExpandTab] = useState([false,false,false])
+
+
+
+ function expand(tab){
+     const ex = expandTab.map((e,i)=>{
+         if(i === tab){
+            return !e
+         }else{
+            return e
+         }
+     })
+     setExpandTab(ex)
+   }
 
 
 	return(	
@@ -35,79 +55,27 @@ const {query} = useParams()
 {/*------------------------------------interviewer search ---------------------------------*/}                      
                        <div className="lg:w-3/12 z-10">
 
-                           <div className="p-2 flex flex-col lg:flex-col justify-start shadow bg-white mb-5">
-                             <h1 className="text-xl  text-center font-semibold mb-2">Search Your Topic</h1>
-                             <div className="flex items-center flex-col gap-2">
-                              <input className='w-full p-1 border'/>
-                              <button className='bg-black p-1 text-white w-full hover:bg-opacity-80'><Link to="/search">search</Link></button>
-                             </div>
-                           </div> 
+                           <Search />
 
-                            <div className="px-2 flex flex-col lg:flex-col justify-start shadow py-5 bg-white">
-                            <div className="border-y border-black p-5 ">
-                              <div className="flex items-center justify-between gap-2 text-xl my-2">
-                                 <h1 className="font-bold">Ratings</h1>
-                                 <span className="text-md"><AiOutlineRight/></span>
-                             </div>
-                             <div className="flex flex-col gap-2">
+                            <div className="p-2 flex flex-col lg:flex-col  justify-start shadow bg-white gap-2">
 
-                                <div className="flex gap-2 items-center">
-                                    <input type="radio" id="3"/>
-                                    <label htmlFor="html">4.5 and Up</label>
-                                 </div>
-                                 <div className="flex gap-2 items-center">
-                                    <input type="radio" id="2" />
-                                    <label htmlFor="css">4.0 and Up</label>
-                                 </div>
-                                 <div className="flex gap-2 items-center">
-                                     <input type="radio" id="1"/>
-                                     <label htmlFor="javascript">3.5 and Up</label>
-                                  </div>
-                                  <div className="flex gap-2 items-center">
-                                     <input type="radio" id="0"/>
-                                     <label htmlFor="javascript">2.5 and Up</label>
-                                  </div>
-                             </div>
-                             </div>
-                             <div className="border-b border-black p-5">
-                              <div className="flex items-center justify-between gap-2 text-xl my-2">
-                                 <h1 className="font-bold">Levels</h1>
-                                 <span className="text-md"><AiOutlineRight/></span>
-                             </div>
-                             <div className="flex flex-col gap-2 hidden">
+                               <Tab title={"Rating"} expand={expand} expandTab={expandTab}  tabIndex={0}/>
+                               <div className={`${expandTab[0]? "h-full":"h-0"} overflow-hidden transition-all border-b border-black`}>
+                                   <Rating />
+                               </div>
 
-                                <div className="flex gap-2 items-center">
-                                    <input type="checkbox" id="Beginner"/>
-                                    <label htmlFor="html">Beginner</label>
-                                 </div>
-                                 <div className="flex gap-2 items-center">
-                                    <input type="checkbox" id="Intermediate"/>
-                                    <label htmlFor="css">Intermediate</label>
-                                 </div>
-                                 <div className="flex gap-2 items-center">
-                                     <input type="checkbox" id="Export"/>
-                                     <label htmlFor="javascript">Export</label>
-                                  </div>
-                                  <div className="flex gap-2 items-center">
-                                     <input type="checkbox" id="Alllevels"/>
-                                     <label htmlFor="javascript">All levels</label>
-                                  </div>
-                             </div>
-                             </div>
-                             <div className="border-b border-black p-5">
-                              <div className="flex items-center justify-between gap-2 text-xl my-2">
-                                 <h1 className="font-bold">Price</h1>
-                                 <span className="text-md"><AiOutlineRight/></span>
-                             </div>
-                             <div className="flex flex-col gap-2">
+                               <Tab title={"Level"} expand={expand} expandTab={expandTab}  tabIndex={1}/>
+                               <div className={`${expandTab[1]? "h-full":"h-0"} overflow-hidden transition-all border-b border-black`}>
+                                   <Level />
+                               </div>
 
-                                <div className="flex gap-2 items-center hidden">
-                                    <input type="range" id="3" name="range"/>
-                                    <label htmlFor="range">4.5 and Up</label>
-                                 </div>
-                             </div>
-                             </div>
-                           </div> 
+                               <Tab title={"Price"} expand={expand} expandTab={expandTab}  tabIndex={2}/>
+                               <div className={`${expandTab[2]? "h-full":"h-0"} overflow-hidden transition-all border-b border-black`}>
+                                   <Price />
+                               </div>
+
+
+                        </div> 
 
                        </div>
 

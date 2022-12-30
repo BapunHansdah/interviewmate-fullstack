@@ -144,9 +144,8 @@ console.log(slotData)
             'Authorization':(auth.token ? auth.token : "")
         }
       }).then(res=>{
-         // console.log(res.data)
-        // console.log(res.data.topic[res.data.topic.length-1])
-        setTopicData([...topicData,{...res.data.topic[res.data.topic.length-1]}])
+            console.log(res)
+            setTopicData([...topicData,{...res.data.topic[res.data.topic.length-1]}])
       })
     setTopics("")
   }catch(err){

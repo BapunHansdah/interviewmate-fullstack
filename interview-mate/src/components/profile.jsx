@@ -13,6 +13,7 @@ import Slot from './sections/intract/abc'
 import getTopics from './Hooks/getTopics'
 import getSlots from './Hooks/getSlots'
 import {useParams} from 'react-router-dom'
+import swal from 'sweetalert2'
 // import { Button, Header, Image, Modal } from 'semantic-ui-react'
 
 
@@ -35,6 +36,7 @@ async function getProfileData(){
         }catch(err){
             console.log(err)
             setLoading(false)
+            swal.fire(err.response.data.msg)
         }
      }
  useEffect(()=>{
@@ -55,13 +57,17 @@ async function getProfileData(){
 
 	return(	
 		<div className="p-5 border shadow max-w-[1000px] mx-auto bg-white mt-10">
-          <Infos info={profileData.info}/>
+          <Infos info={profileData.info} slot={profileData.slot} userReviewed={profileData.userReviewed}/>
           <Topic info={profileData.info.topic}/>
          {
          profileData.info.role==="interviewer" ?
            <Slot info={profileData.slot} bio={profileData.info} topic={profileData.info.topic}/>:<></>
          }
-         <Reviews info={profileData.review}/>
+         {
+         profileData.info.role==="interviewer" ?
+            <Reviews info={profileData.review} /> :<></>
+         }
 		</div>
+
 	)
 }

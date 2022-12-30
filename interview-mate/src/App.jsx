@@ -8,28 +8,31 @@ import EditPanel from './components/editPanel'
 import Profile from './components/profile'
 import SearchResult from './components/searchResultPage'
 import Verify from './components/Auth/verify'
+import Admin from './components/Admin/main'
+import NotFound from './components/notfound'
+import Layout from './layout'
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 
 function App() {
-
-
-
     return (
         <>
         <BrowserRouter>
-          <Header/>
           <Routes>
-            <Route path='/' element={<Main/>} />
-            <Route path='/login' element={<Login />} />
-            <Route path='/signup' element={<SignUp />} />
-            <Route path='/panel' element={<EditPanel/>} /> 
-            <Route path='/search/:query' element={<SearchResult/>} />
-            <Route path='/verify' element={<Verify/>} /> 
-            <Route path='/profile/:name' element={<Profile/>} />   
+            <Route element={<Layout/>}>
+              <Route path='/' element={<Main/>} />
+              <Route path='/panel' element={<EditPanel/>} /> 
+              <Route path='/search/:query' element={<SearchResult/>} />
+              <Route path='/verify' element={<Verify/>} /> 
+              <Route path='/profile/:name' element={<Profile/>} />   
+            </Route>
+              <Route path='/login' element={<Login />} />
+              <Route path='/signup' element={<SignUp />} />
+              <Route path='/admin' element={<Admin/>} />
+              <Route path='/error' element={<NotFound/>} />  
+              <Route path='*' element={<NotFound/>} />          
           </Routes>
-        <Footer/>
       </BrowserRouter> 
       </>
     )

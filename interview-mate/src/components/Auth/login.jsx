@@ -4,12 +4,16 @@ import axios from 'axios'
 import {useDispatch} from 'react-redux'
 import {useNavigate,Navigate} from 'react-router-dom'
 import useAuth from '../useAuth'
+import swal from 'sweetalert2'
+
 
 function Login(){
 	const [sign_info,setSign_info] = useState({})
    const dispatch=useDispatch()
    const navigate = useNavigate()
    const {auth,loading} = useAuth()
+
+   console.log(auth)
 
    async function signInUser(e){
    	e.preventDefault()
@@ -18,7 +22,7 @@ function Login(){
         refreshPage()
    	}catch(err){
    	  console.log(err)
-
+        swal.fire(err.response.data.msg)
    	}
    }
 
@@ -33,9 +37,7 @@ function Login(){
      return ;
   }
 
-   // useEffect(()=>{
-   //   refreshPage()
-   // },[])
+
 
     if(loading){
        return <>loading</>
@@ -43,7 +45,7 @@ function Login(){
 
 
    
-   if(auth.isLoggedIn){
+   if(auth.token){
       return(
          <>
            <Navigate to="/" />

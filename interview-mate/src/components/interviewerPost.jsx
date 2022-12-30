@@ -4,11 +4,12 @@ import axios from 'axios'
 import TopicArr from './topicArr'
 import {useState,useEffect} from 'react'
 import {Link,useNavigate} from 'react-router-dom'
+import Rating from './rating'
 
 
 export default function InterviewerPost({query}){
 
-const [profileData,setProfileData] = useState([])
+const [profileData,setProfileData] = useState({})
 const [loading,setLoading] = useState(true)
 
 async function getProfileData(){
@@ -26,20 +27,19 @@ async function getProfileData(){
  useEffect(()=>{
     getProfileData()
  },[])
-  console.log(profileData)
   if(loading){
   	return <>loading...</>
   }
-  console.log(profileData)
-  // return null
+
+ 
 
 	return(	
 		<>
 		{
-     profileData.map((m,i)=>{
+   profileData.user && profileData.user.map((m,i)=>{
 			return (
 
-				   <div className="p-5 border shadow bg-white" key={m._id}>
+		<div className="p-5 border shadow bg-white" key={m._id}>
          <div className="flex w-full justify-between">
            <div className="flex flex-col md:flex-row gap-2 item-center ">
                 <div className="">
@@ -49,7 +49,9 @@ async function getProfileData(){
 			     <div className="">
 							  <div className="flex flex-col gap-2">
 							     <h3 className="cursor-pointer hover:text-gray-800"><Link to={`/profile/${m.user.username}`}>{m.fullname}</Link></h3>
-							     <span className="flex items-center gap-2 text-xs text-gray-700">9.8/10<AiFillStar/><AiFillStar/><AiFillStar/><AiFillStar/><AiFillStar/></span>
+							     <span className="flex items-center gap-2 text-xs text-gray-700">
+							          <Rating id={m.user._id}/><AiFillStar/>
+							     </span>
 		            </div>
 				   </div>
 			    </div>

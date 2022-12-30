@@ -17,7 +17,8 @@ export const getSingleUser =async (req,res,next)=>{
           const info = await Info.findOne({user:user.id}).populate({path:'user',select:'username email'})
           const slot = await Slot.find({by:user.id})
           const review = await Slot.find({by:user.id,rating:{$gt:0}}).populate({path:'bookedBy',select:'username'})
-          return res.status(200).json({info,slot,review});
+          const userReviewed = await Slot.find({bookedBy:user.id,rating:{$gt:0}})
+          return res.status(200).json({info,slot,review,userReviewed});
      }catch(err){
      	next(err)
      }
@@ -29,8 +30,8 @@ export const getPublicProfiles =async (req,res,next)=>{
      const {topic} = req.params
      
      try{
-          const user = await Info.find({role:"interviewer",active:true,topic:{$elemMatch:{title:topic}}}).populate({path:"user",select:"username"}).select("fullname location bio avatar topic")
-          return res.status(200).json(user);
+          const user = await Info.find({role:"interviewer",active:true,topic:{$elemMatch:{title:topic}}}).populate({path:"user",select:"username"})
+          return res.status(200).json({user});
      }catch(err){
           next(err)
      }
@@ -49,10 +50,22 @@ export const getPublicTopics =async (req,res,next)=>{
 export const getPublicSlots =async (req,res,next)=>{
      const {ID} = req.params
      try{
-          const slots = await SLot.find({by:ID}) 
+          const slots = await Slot.find({by:ID}) 
           return res.status(200).json(slots);
      }catch(err){
           next(err)
      }
 }
+
+
+export const getPublicRatings = async (req,res,next)=>{
+     const {ID} = req.params
+     try{
+          const slots = await Slot.find({by:ID,rating:{$gt:0}}) 
+          return res.status(200).json(slots);
+     }catch(err){
+          next(err)
+     }
+}
+
 

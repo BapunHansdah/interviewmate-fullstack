@@ -1,5 +1,5 @@
 import express from 'express'
-import {getSingleUser,getPublicProfiles,getPublicTopics} from '../controller/publicController.js'
+import {getSingleUser,getPublicProfiles,getPublicTopics,getPublicRatings} from '../controller/publicController.js'
 
 const router = express.Router()
 
@@ -7,6 +7,7 @@ const router = express.Router()
 router.get('/profile/:name',getSingleUser)
 router.get('/feed/:topic',getPublicProfiles)
 router.get('/topic/:ID',getPublicTopics)
+router.get('/rating/:ID',getPublicRatings)
 
 
 

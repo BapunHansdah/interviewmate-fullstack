@@ -25,7 +25,7 @@ export const editUser =async (req,res,next)=>{
      	}
      	const updateUser = await Info.findOneAndUpdate({user:id},{fullname,location,bio,website},{new:true})
 
-          return res.status(200).json(updateUser);
+          return res.status(200).json({msg:"saved Successfully"});
      }catch(err){
      	next(err)
      }
@@ -67,7 +67,6 @@ export const addTopic =async (req,res,next)=>{
 export const deleteTopic =async (req,res,next)=>{
      const {id} =req.user
      const {ID} =req.params
-     // console.log(ID)
      try{
      	const user = await Info.findOne({user:id})
      	if(!user){
@@ -75,7 +74,7 @@ export const deleteTopic =async (req,res,next)=>{
      	}
      	const updateUser = await Info.findOneAndUpdate({user:id},{$pull:{"topic":{"_id":ID}}},{new:true})
 
-          return res.status(200).json(updateUser);
+          return res.status(200).json({msg:"topic deleted successfully"});
      }catch(err){
      	next(err)
      }

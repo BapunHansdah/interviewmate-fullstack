@@ -1,6 +1,8 @@
 import {Link,useNavigate} from 'react-router-dom'
 import axios from 'axios'
 import {useState,useEffect} from 'react'
+import swal from 'sweetalert2'
+
 
 function SignUp(){
 	const [reg_info,setReg_info]  = useState({})
@@ -29,6 +31,7 @@ function SignUp(){
         navigate('/verify') 	
      }catch(err){
      	  console.log(err)
+        swal.fire(err.response.data.msg)
      }
 
    }

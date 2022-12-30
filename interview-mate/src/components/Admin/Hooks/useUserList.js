@@ -1,28 +1,21 @@
 import {useState,useEffect} from 'react'
 import axios from 'axios'
-import useAuth from '../useAuth'
+import useAuth from '../../useAuth'
 
 export default ()=>{
- const [info,setInfo] = useState({})
+ const [userListData,setUserListData] = useState([])
  const [loading,setLoading] = useState(true)
  const {auth} = useAuth()
- const [topicData,setTopicData] = useState([])
- const [active,setActive] = useState(false)
 
-
-async function getUserData(){
-     setLoading(true)
+async function getUserListData(){
         try{
           if(auth.token){
-             await axios.get('/api/user/me',{
+             await axios.get('/api/admin/users',{
                 'headers':{
                     'Authorization': (auth.token ? auth.token : "")
                 }
              }).then(res=>{
-                 console.log(res)
-                 setInfo(res.data)
-                 setTopicData(res.data.topic)
-                 setActive(res.data.active)
+                 setUserListData(res.data)
                  setLoading(false)
              })
            }
@@ -32,9 +25,9 @@ async function getUserData(){
         }
      }
  useEffect(()=>{
-    getUserData()
+    getUserListData()
  },[auth.token])
 
- return {info,setInfo,loading,auth,active,setActive,topicData,setTopicData}
+ return {userListData,setUserListData,loading}
 
 }

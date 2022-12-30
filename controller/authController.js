@@ -40,11 +40,13 @@ export const register =async (req,res,next)=>{
 	        const hashPassword = await bcrypt.hash(password,salt)
 
 	         // create token
-     		const newUser = { username, email, password: hashPassword ,role };
+     		  const newUser = { username, email, password: hashPassword ,role };
       		const activation_token = createToken.activation(newUser);
-
-      		const url = `https://interviewmates.onrender.com/api/auth/activate/${activation_token}`;
-            sendEmailRegister(email, url, "Verify your email");
+      		const testUrl = "http://localhost:4000"
+      		const liveUrl = "https://interviewmates.onrender.com"
+      		const url = `${process.env.NODE_ENV === 'development' ?testUrl:liveUrl}/api/auth/activate/${activation_token}`;
+          console.log(url)
+          sendEmailRegister(email, url, "Verify your email");
 
             return res.status(200).json({ msg: "Welcome! Please check your email." });	
 
@@ -87,11 +89,11 @@ export const activate = async (req,res,next) =>{
 		    		const newInfo = new Info({
 		    			user:auth._id,
 		    			fullname:email.substring(0,email.indexOf('@')),
-		    	        location:'',
-		    	        bio:'',
-		    	        website:'',
-		    	        role:role,
-		    	        topic:[]
+		    	    location:'',
+		    	    bio:'',
+		    	    website:'',
+		    	    role:role,
+		    	    topic:[]
 		    		}) 
 		    		newInfo.save(err=>{
 		    			if(err){
@@ -123,6 +125,7 @@ export const signin = async (req,res,next)=>{
 
 		//check if the user exist in the datbase
 		const user =await User.findOne({email}) 
+		const info = await Info.findOne({user:user.id})
 
 		if(!user){
 			return res.status(400).json({msg:"This email is not registered !! Please sign up"})
@@ -137,7 +140,8 @@ export const signin = async (req,res,next)=>{
 		}
 
 		//refresh token
-		const rf_token =createToken.refresh({id:user.id})
+		const rf_token =createToken.refresh({id:user.id,role:info.role})
+		console.log(rf_token)
 
 		return res.cookie("_apprftoken",rf_token,{httpOnly:true,path:"/api/auth/access",maxAge: 24 * 60 * 60 * 1000}).status(200).json({name:user.username,msg:"sign in success"})
 
@@ -162,7 +166,7 @@ export const access = async (req,res,next)=>{
 			if(err){
 				return res.status(400).json({msg:"Please sign in again"})
 			}
-			const ac_token = createToken.access({ id: user.id });
+			const ac_token = createToken.access({ id: user.id ,role:user.role });
 			return res.status(200).json({ ac_token });
 		})
 
