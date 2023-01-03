@@ -9,7 +9,7 @@ export const userInfo = async (req,res,next)=>{
 	const {id} = req.user
 	try{
 		const user = await Info.findOne({user:id}).populate({path:'user',select:'email username roles active'})
-	    return res.status(200).json(user);
+	     return res.status(200).json(user);
 	}catch(err){
 		next(err)
 	}
@@ -17,13 +17,13 @@ export const userInfo = async (req,res,next)=>{
 
 export const editUser =async (req,res,next)=>{
      const {id} =req.user
-     const {fullname,location,bio,website} =req.body
+     const {fullname,location,bio,website,level} =req.body
      try{
      	const user = await Info.findOne({user:id})
      	if(!user){
      		return res.status(404).json("user not found")
      	}
-     	const updateUser = await Info.findOneAndUpdate({user:id},{fullname,location,bio,website},{new:true})
+     	const updateUser = await Info.findOneAndUpdate({user:id},{fullname,location,bio,website,level},{new:true})
 
           return res.status(200).json({msg:"saved Successfully"});
      }catch(err){

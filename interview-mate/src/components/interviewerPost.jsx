@@ -4,62 +4,51 @@ import axios from 'axios'
 import TopicArr from './topicArr'
 import {useState,useEffect} from 'react'
 import {Link,useNavigate} from 'react-router-dom'
-import Rating from './rating'
 
 
-export default function InterviewerPost({query}){
 
-const [profileData,setProfileData] = useState({})
-const [loading,setLoading] = useState(true)
 
-async function getProfileData(){
-	   setLoading(true)
-        try{
-             await axios.get(`/api/public/feed/${query}`).then(res=>{
-                  setProfileData(res.data)
-                  setLoading(false)
-             })
-        }catch(err){
-            console.log(err)
-            setLoading(false)
-        }
-     }
- useEffect(()=>{
-    getProfileData()
- },[])
+export default function InterviewerPost({query,filter,loading,profileData}){
+
+
+
   if(loading){
   	return <>loading...</>
   }
 
- 
-
+ console.log(profileData)
+// .filter((r)=> r.profileRating  >= filter.rating && r.minPrice <= parseInt(filter.price) && filter.level.includes(r.level) )
 	return(	
+
 		<>
 		{
-   profileData.user && profileData.user.map((m,i)=>{
+ profileData &&  profileData.length >0 ?   profileData.map((m,i)=>{
 			return (
 
 		<div className="p-5 border shadow bg-white" key={m._id}>
          <div className="flex w-full justify-between">
            <div className="flex flex-col md:flex-row gap-2 item-center ">
                 <div className="">
-			             <img className="w-20" src="https://www.nicepng.com/png/detail/301-3012856_account-user-profile-avatar-comments-free-image-user.png"/>
-		            </div>
+			        <img className="w-20" src="https://www.nicepng.com/png/detail/301-3012856_account-user-profile-avatar-comments-free-image-user.png"/>
+		        </div>
 
 			     <div className="">
 							  <div className="flex flex-col gap-2">
 							     <h3 className="cursor-pointer hover:text-gray-800"><Link to={`/profile/${m.user.username}`}>{m.fullname}</Link></h3>
+							     <div><span className="bg-orange-500 text-white text-center text-sm rounded px-1">{m.level}</span></div>
+							     
 							     <span className="flex items-center gap-2 text-xs text-gray-700">
-							          <Rating id={m.user._id}/><AiFillStar/>
+							          {m.profileRating}<AiFillStar/>
+							          {m.interviewed} interviewed
 							     </span>
 		            </div>
 				   </div>
 			    </div>
-					<div className="">
-						  <div className="">
-						     $<span className="">30/hr</span>
-						  </div>
-					</div>
+				<div className="">
+					  <div className="">
+					     <span className="">{`${m.minPrice}-${m.maxPrice}`}/hr</span>
+					  </div>
+				</div>
           </div>
            
 
@@ -77,8 +66,9 @@ async function getProfileData(){
 		</div>
 
 				)
-		}) 
+		}) :<div className="text-center text-2xl">No Result..</div>
 	}
+	
 </>
 	)
 

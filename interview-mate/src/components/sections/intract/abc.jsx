@@ -9,12 +9,11 @@ import {useNavigate} from 'react-router-dom'
 import swal from 'sweetalert2'
 
 Modal.setAppElement('#root')
-export default function slot({info,topic,bio}){
+export default function slot({info,topic,bio,date,updateDate,availSlot,setAvailSlot}){
 
-const [date, updateDate] = useState(moment(new Date()));
 const navigate = useNavigate()
 
-const [availSlot,setAvailSlot] = useState(info)
+// const [availSlot,setAvailSlot] = useState(info)
 const [open, setOpen] = useState(false)
 const [paymentInfo,setPaymentInfo] = useState({time:"",by:"",id:"",price:"",duration:"",topic:[],booked:null})
 const [topicSelected,setTopicSelected] = useState([])

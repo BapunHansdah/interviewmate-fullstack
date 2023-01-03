@@ -19,7 +19,7 @@ async function getUserData(){
                     'Authorization': (auth.token ? auth.token : "")
                 }
              }).then(res=>{
-                 console.log(res)
+                 // console.log(res)
                  setInfo(res.data)
                  setTopicData(res.data.topic)
                  setActive(res.data.active)

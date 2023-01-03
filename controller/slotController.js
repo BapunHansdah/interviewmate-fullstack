@@ -1,14 +1,18 @@
 import bcrypt from 'bcryptjs'
 import Slot from '../model/slotSchema.js'
+import Info from '../model/infoSchema.js'
 import mongoose from 'mongoose'
 import createToken from '../utils/createToken.js'
 import {sendEmailRegister} from '../utils/sendMail.js'
 import jwt from 'jsonwebtoken'
+import moment from 'moment'
 
 export const addSlot= async (req,res,next)=>{
 	const {id} = req.user
 	const {time,date,price,duration} = req.body
+    console.log(date)
 
+    
 	if(!time){
 		return res.status(403).json({msg:"add time"})
 	}
@@ -16,12 +20,23 @@ export const addSlot= async (req,res,next)=>{
 		return res.status(403).json({msg:"add date"})
 	}
 
+	if(price >1000){
+		return res.status(403).json({msg:"Price can't be higher than 1000"})
+	}
+	if(duration <15){
+		return res.status(403).json({msg:"Duration can't be less than 1 minute"})
+	}
 	try{
 		 const newSlot = await new Slot({
 		 	time,date,by:id,price,duration
 		 })
 		 await newSlot.save()
-	      return res.status(200).json(newSlot);
+
+         const maxPrice = await Slot.find({by:id}).sort({price:-1}).limit(1)
+         const minPrice = await Slot.find({by:id}).sort({price:+1}).limit(1)
+		 const update =await Info.findOneAndUpdate({user:id},{maxPrice:maxPrice[0].price,minPrice:minPrice[0].price})
+
+	     return res.status(200).json(newSlot);
 	}catch(err){
 		next(err)
 	}
@@ -29,8 +44,10 @@ export const addSlot= async (req,res,next)=>{
 
 export const getSlots= async (req,res,next)=>{
 	const {id} = req.user
+	const {date} = req.params
+	console.log(date)
 	try{
-		const slots = await Slot.find({by:id})
+		const slots = await Slot.find({by:id,date:date})
 	     return res.status(200).json(slots);
 	}catch(err){
 		next(err)
@@ -43,11 +60,26 @@ export const deleteSlot= async (req,res,next)=>{
 	if(!id){
 		return res.status(401).json({msg:"Login Again"})
 	}
-	if(!ID){
-		return res.status(401).json({msg:"This Slot doesn't exist"})
+	
+	const slot = await Slot.findOne({_id:ID})
+
+	if(!slot){
+	    return res.status(404).json({msg:"No slots found"});
 	}
+
+	if(slot.booked){
+		return res.status(403).json({msg:"You can't delete booked slots"})
+	}
+
+
+
 	try{
 		 const slots = await Slot.deleteOne({_id:ID,by:id})
+
+		 const maxPrice = await Slot.find({by:id}).sort({price:-1}).limit(1)
+         const minPrice = await Slot.find({by:id}).sort({price:+1}).limit(1)
+		 const update =await Info.findOneAndUpdate({user:id},{maxPrice:maxPrice[0].price,minPrice:minPrice[0].price})
+		 
 	     return res.status(200).json({msg:"Slot Deleted Successfully"});
 	}catch(err){
 		next(err)
@@ -83,13 +115,17 @@ export const scheduleSlot= async (req,res,next)=>{
 
 export const activeSlots= async (req,res,next)=>{
 	const {id} = req.user
+	const {page} = req.params
 
 	try{
 		 if(!id){
 		 return res.status(200).json({msg:"login first"});
          }
-	 	 const updateSlot = await Slot.find({by:id,booked:true}).populate({path:'bookedBy',select:'username email roles'})
-	     return res.status(200).json(updateSlot);
+
+         const totalBookedSlots = await Slot.countDocuments({by:id,booked:true})
+         
+	 	 const activeSlots = await Slot.find({by:id,booked:true}).populate({path:'bookedBy',select:'username email roles'}).skip(page*10).limit(10)
+	     return res.status(200).json({activeSlots,totalBookedSlots});
 	}catch(err){
 		next(err)
 	}
@@ -114,17 +150,20 @@ export const approveSlot= async (req,res,next)=>{
 	}
 }
 
-export const approvedSlots= async (req,res,next)=>{
+export const bookedSlots= async (req,res,next)=>{
 	const {id} = req.user
+	const {page} = req.params
 
 	try{
 		 if(!id){
 		 return res.status(200).json({msg:"login first"});
          }
-	 	 const updateSlot = await Slot.find({bookedBy:id}).populate({path:'by',select:'username email roles'})
-	     return res.status(200).json(updateSlot);
+         const totalBookedSlots = await Slot.countDocuments({bookedBy:id})
+	 	 const bookedSlots = await Slot.find({bookedBy:id}).populate({path:'by',select:'username email roles'}).skip(page*10).limit(10)
+	     console.log(totalBookedSlots)
+	     return res.status(200).json({bookedSlots,totalBookedSlots});
 	}catch(err){
-		next(err)
+		 next(err)
 	}
 }
 
@@ -145,11 +184,39 @@ export const completeSlot= async (req,res,next)=>{
 		 if(!id){
 		 return res.status(200).json({msg:"login first"});
          }
+         const slot = await Slot.findOne({_id:ID})
+
+         console.log(slot)
+
+	     if(!slot){
+	      return res.status(404).json({msg:"No slots found"});
+	     }
+
+
          if(!ID){
 		 return res.status(200).json({msg:"Invalid slot"});
          }
 	 	 const updateSlot = await Slot.findOneAndUpdate({_id:ID},{completed:completed,rating,review},{new:true})
-	     return res.status(200).json({msg:"Successfully Reviewed"});
+
+	 	const slots = await Slot.find({by:by,completed:true}).then(async (res)=>{
+	 			const a = res.reduce((acc,obj)=>{
+		    	if(obj.completed === true){
+		    		acc.completed += 1
+		    		acc.rating = acc.rating + obj.rating
+		    	}
+		    	return acc
+	            },{completed:0,rating:0})
+	            const rating = (a.completed ? (a.rating/a.completed).toFixed(1) : 0)
+		        const update= await Info.findOneAndUpdate({user:by},{profileRating:rating,interviewed:a.completed},{new:true})
+
+	 	})
+
+	 	const userAttend = await Slot.count({bookedBy:id,completed:true}).then(async(res)=>{
+		        const update= await Info.findOneAndUpdate({user:id},{attended:res},{new:true})
+		        console.log(update)
+	 	})
+
+	     return res.status(200).json({msg:"Successfully Reviewed",slots});
 	}catch(err){
 		next(err)
 	}

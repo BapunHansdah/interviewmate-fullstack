@@ -7,6 +7,7 @@ import {Link} from 'react-router-dom'
 import Swal from 'sweetalert2'
 import Modal from 'react-modal'
 import { Rating } from 'react-simple-star-rating'
+import Pagination from '../../Utils/pagination'
 
 
 export default function interviewPanelSchedules(){
@@ -19,24 +20,32 @@ export default function interviewPanelSchedules(){
  const [open, setOpen] = useState(false)
  const [reviewInfo,setReviewInfo] = useState({id:"",by:"",review:"",rating:0})
  const [reviewText,setReviewText] = useState("")
+ const [pageNumber,setPageNumber] = useState(0)
+ const [totalBookedSlots,setTotalBookedSlots] = useState(0)
+
+ const pageArray=new Array(totalBookedSlots).fill(0)
+
+
+
+ 
 
 const handleRating = (rate,index) => {
     setRating(rate)
   }
 
-  // const onPointerMove = (value, index) => console.log(value)
 
 
 async function getApprovedSlotData(){
         try{
           if(auth.token){
-             await axios.get('/api/slot/approvedslots',{
+             await axios.get(`/api/slot/bookedslots/${pageNumber}`,{
                 'headers':{
                     'Authorization': (auth.token ? auth.token : "")
                 }
              }).then(res=>{
              	 console.log(res.data)
-                 setApprovedSlotData(res.data)
+                 setApprovedSlotData(res.data.bookedSlots)
+                 setTotalBookedSlots(res.data.totalBookedSlots)
                  setLoading(false)
              })
            }
@@ -136,6 +145,10 @@ async function getApprovedSlotData(){
      }
   }
 
+  function setPage(num){
+     setPageNumber(num)
+  }
+
 const bg = {
    overlay: {
      background: "rgba(0, 0, 0, 0.5)",
@@ -144,7 +157,7 @@ const bg = {
 
  useEffect(()=>{
     getApprovedSlotData()
- },[auth.token])
+ },[auth.token,pageNumber])
   console.log(rating)
 
     if(loading){
@@ -152,9 +165,9 @@ const bg = {
     }
 	return(
 		 <div className="mt-5">
-		  <div className="grid overflow-x-scroll md:overflow-auto mt-5">
+		  <div className="overflow-x-scroll md:overflow-auto mt-5 h-[500px]">
 		  {
-		  	approvedSlotData.length > 0 ?  
+		  approvedSlotData	&& approvedSlotData.length > 0 ?  
 		  	<>
 		    <div className="flex font-bold mx-auto">
 		     <div className="w-96 h-10 border flex items-center justify-center bg-black text-white">Interviewer</div>
@@ -162,10 +175,10 @@ const bg = {
 		     <div className="w-72 h-10 border flex items-center justify-center bg-black text-white">Topic</div>
 		     <div className="w-24 h-10 border flex items-center justify-center bg-black text-white">Approved</div>
 		     <div className="w-24 h-10 border flex items-center justify-center bg-black text-white">Attended</div>
-		     <div className="w-20 flex items-center"><button className="bg-red-500 text-white p-2 w-full">Cancel</button></div>
+		     <div className="w-24 h-10 border flex items-center justify-center bg-black text-white">Cancel</div>
 		    </div>
 		    {
-		       	approvedSlotData.map((a,i)=>{
+		       approvedSlotData &&	approvedSlotData.map((a,i)=>{
 		       		return (
 		       			   <div className="flex mx-auto" key={a._id}>
 		       			      <div className={`w-96 h-10 border flex items-center justify-center text-sm ${a.booked ? "text-blue-500":"text-gray-400"}`}><Link to={`/profile/${a.by.username}`}>{a.by.username}</Link></div>
@@ -180,7 +193,7 @@ const bg = {
 			                  <div className={`w-24 h-10 border flex items-center justify-center text-sm ${a.approved ? a.booked ? "bg-blue-500":"bg-blue-200" :""}`}><BsCheckSquareFill style={{color:'white'}}/></div>
 			                  <div className="w-24 h-10 border flex items-center justify-center text-sm"><button disabled={!a.approved || !a.booked} onClick={()=>openModal(a._id,a.by._id,a.review,a.rating)} className={`${!a.completed ? !a.approved || !a.booked ? "bg-orange-100" :"bg-orange-300":"bg-orange-500"} h-10 text-white w-full flex items-center gap-2 justify-center`}><MdOutlineRateReview/>{!a.completed ? "Review" : "Reviewed"}</button></div>
 		       			      {
-		       			      	!a.approved ?<div className="flex items-center w-20"><button className={`${a.booked ? "bg-red-500":"bg-red-100"} text-white p-2 w-full h-10`} onClick={()=>openCancelModal(a._id)} disabled={!a.booked}>X</button></div>:<div className="flex items-center w-20 justify-center border bg-red-100 text-white">X</div>
+		       			      	!a.approved ?<div className="w-24 h-10 border flex items-center justify-center text-sm cursor-pointer text-white"><button className={`${a.booked ? "bg-red-500":"bg-red-100"} w-full h-10`} onClick={()=>openCancelModal(a._id)} disabled={!a.booked}>X</button></div>:<div className="w-24 h-10 border flex items-center text-white cursor-pointer justify-center text-sm bg-red-200">X</div>
 		       			      }
 		       			   </div>
 		       			)
@@ -216,6 +229,9 @@ const bg = {
 		  }  
 		  <div className="h-5"></div>
 		  </div>
+          <div>
+          <Pagination pageArray={pageArray} setPage={setPage} pageNumber={pageNumber}/>
+          </div>
 		   <div className="px-2 mt-2">
 		       <span className="text-md bg-blue-500 text-white px-2 font-bold">NOTES</span>
 		       <h1 className="bg-gray-100 text-red-500 px-2 py-1 font-semibold text-sm">1. Once the interviewer approved your slot , you can not cancel slot !!</h1>

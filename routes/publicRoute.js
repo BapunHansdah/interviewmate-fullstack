@@ -4,14 +4,14 @@ import {getSingleUser,getPublicProfiles,getPublicTopics,getPublicRatings} from '
 const router = express.Router()
 
 // router.post('/add',addSlot)
-router.get('/profile/:name',getSingleUser)
-router.get('/feed/:topic',getPublicProfiles)
+router.get('/profile/:name/:date',getSingleUser)
+router.get('/feed/:topic/:page/:minprice/:profilerating/:level',getPublicProfiles)
 router.get('/topic/:ID',getPublicTopics)
 router.get('/rating/:ID',getPublicRatings)
 
 
 
-// router.delete('/delete/:ID',deleteSlot)
+// routerlete/:ID',deleteSlot)
 
 
 

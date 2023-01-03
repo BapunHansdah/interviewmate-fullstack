@@ -1,4 +1,6 @@
 import mongoose from 'mongoose'
+import Info from '../model/infoSchema.js'
+
 
 export const connectDB = async ()=>{
 
@@ -12,3 +14,4 @@ export const connectDB = async ()=>{
 	}
 
 }
+       // await Info.updateMany({}, {$set: {minPrice:0,maxPrice:0}})

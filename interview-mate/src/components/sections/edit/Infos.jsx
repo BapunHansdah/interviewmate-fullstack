@@ -5,6 +5,8 @@ export default function sample({submitInfo,handleChangeInfo,Info,Data,loading}){
   if(loading || Info.fullname === undefined){
        return <>Loading...</>
   }
+
+  const LevelArray = [{id:1,level:'Beginner'},{id:2,level:'Intermadiate'},{id:3,level:'Export'}]
 	return(
 		  <>
 		    <form className="py-5" onSubmit={submitInfo}>
@@ -15,12 +17,27 @@ export default function sample({submitInfo,handleChangeInfo,Info,Data,loading}){
                           Full Name
                        </label>
                        <input onChange={handleChangeInfo} name="fullname" value={Info.fullname} className="my-1 w-full p-1 border"  required={true}/>
-    					       </div>  
+    					       </div> 
                       <div>
                       <label className="my-2 font-semibold">
                           Location
                       </label>
                       <input onChange={handleChangeInfo} name="location" value={Info.location} className="my-1 w-full border p-1"  required={true}/>
+                      </div>
+
+                      <div>
+                      <label className="my-2 font-semibold">
+                          Beginner
+                      </label>
+                        <select className="my-1 w-full border p-1" value={Info.level} name="level" onChange={handleChangeInfo}>
+                         {
+                          LevelArray.map((m,i)=>{
+                            return(
+                                <option key={m.id}  value={m.level} >{m.level} </option>
+                              )
+                          })
+                         }
+                        </select>
                       </div>
 
                       <div>

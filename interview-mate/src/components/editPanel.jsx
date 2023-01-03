@@ -5,8 +5,6 @@ import {BsFillArrowLeftSquareFill} from 'react-icons/bs'
 import {BsFillArrowRightSquareFill} from 'react-icons/bs'
 import {RiImageEditFill} from 'react-icons/ri'
 import Reviews from './sections/read/comments'
-import Earnings from './sections/read/Earnings'
-import InterviewPanelSchedules from './PanelSchedules'
 import moment from 'moment'
 import {AiOutlineRight} from 'react-icons/ai'
 import {AiOutlineDown} from 'react-icons/ai'
@@ -16,12 +14,12 @@ import Slot from './sections/edit/Slot'
 import Topic from './sections/edit/Topic'
 import Tabs from './Utils/tabs'
 import INFO from './sections/edit/Infos'
-import UserPanelSchedule from './sections/edit/userPanelSchedule'
 import getUserInfo from './Hooks/getUserInfo'
 import useAuth from './useAuth'
 import axios from 'axios'
 import getSlots from './Hooks/getSlots'
 import getTopics from './Hooks/getTopics'
+import swal from 'sweetalert2'
 
 
 
@@ -30,25 +28,23 @@ import getTopics from './Hooks/getTopics'
 export default function AdminPanel(){
 
 const {info,setInfo,active,setActive,topicData,setTopicData} = getUserInfo()
-const {slotData,setSlotData} = getSlots()
 const {auth} = useAuth()
 const [Data,setData] = useState(DataJSON)
 const [slots,setSlots] =useState({time:"08:00",duration:30,price:0}) 
 const [topics,setTopics] =useState("") 
-const [date, updateDate] = useState(moment(new Date()));
-const [expandTab , setExpandTab] = useState([false,false,false,false,false,false])
+const {slotData,setSlotData,date, updateDate} = getSlots()
+const [expandTab , setExpandTab] = useState([true,true,true,true,true,true])
 const [loading,setLoading] = useState(false)
 const [searchText,setSearchText] = useState("")
 const [topicRecommandation,setTopicRecommandation] = useState([{id:1,title:"frontend"},{id:2,title:"backend"},{id:3,title:"fullstack"},{id:4,title:"business"}])
  
 
-// console.log(info)
 
 //function for interviewr data------------------------------------- 
 function handleChangeInfo(e){
   setInfo({...info,[e.target.name]:e.target.value})
 }
-
+  
 
 const isValidUrl = urlString=> {
         var urlPattern = new RegExp('^(https?:\\/\\/)?'+ // validate protocol
@@ -70,20 +66,18 @@ async function submitInfo(e){
         alert('please add a valid url')
         return
     }
+
     try{
         setLoading(true)
-        console.log('hello')
         await axios.put(`/api/user/edit`,info,{
            'headers':{
                 'Authorization':(auth.token ? auth.token : "")
            }
         }).then(res=>{
-            console.log(res.data)
             setLoading(false)
         })
         setLoading(false)
     }catch(err){
-        console.log(err)
         setLoading(false)
     }
 }
@@ -98,23 +92,36 @@ function handleChangeSlotData(e){
 
 async function submitSlotData(e){
   e.preventDefault()
+
+
+  if(slots.price > 1000){
+     swal.fire("Price cant be higher than 1000")
+     return 
+  }
+
+  if(slots.duration < 15){
+     swal.fire("Duration cant be less than 15")
+     return 
+  }
+
+   const Converteddate = moment(slots.date).format("DD MMM YYYY")
+
+
   const hour = slots.time.split(":")
   const ConvertedTime = hour[0] > 12 ? (`${hour[0]-12}:${hour[1]} PM`) : hour[0]=== "12" ? (`${12}:${hour[1]} PM `) : hour[0]==="00" ? (`${12}:${hour[1]} AM `) : (`${hour[0]-0}:${hour[1]} AM`) 
   try{
-      await axios.post('api/slot/add',{time:ConvertedTime,date:moment(slots.date).format("DD MMM YYYY"),...slots},{
+      await axios.post('api/slot/add',{time:ConvertedTime,date:Converteddate,duration:slots.duration,price:slots.price},{
         'headers':{
             'Authorization':(auth.token ? auth.token : "")
         }
       }).then(res=>{
-        console.log(res.data)
         setSlotData([...slotData,{...res.data}])
       })
   }catch(err){
-     console.log(err)
+
   }
 }
 
-console.log(slotData)
 
 
 // function to change dates in slot---------------------------------
@@ -144,15 +151,12 @@ console.log(slotData)
             'Authorization':(auth.token ? auth.token : "")
         }
       }).then(res=>{
-            console.log(res)
             setTopicData([...topicData,{...res.data.topic[res.data.topic.length-1]}])
       })
     setTopics("")
   }catch(err){
-     console.log(err)
   }
 
-  // console.log(topicData)
 
   }
   
@@ -178,11 +182,9 @@ console.log(slotData)
             'Authorization':(auth.token ? auth.token : "")
         }
       }).then(res=>{
-         console.log(res.data)
          setActive(res.data.active)
       })
   }catch(err){
-     console.log(err)
   }
 
   }
@@ -300,61 +302,6 @@ return(
 
 
 
-{/*--------------------------------slot list ----------------------------------------------*/}
-
-{info.role === "interviewer" ?
-          <div className="border-b border-black py-5">        
-             <Tabs 
-               expand = {expand} 
-               expandTab={expandTab} 
-               title={"Slots"} 
-               tabIndex={3}
-             />
-             <div className={`${expandTab[3]? "h-full":"h-0"} overflow-hidden`}>
-
-               <InterviewPanelSchedules/>
-        
-             </div>
-          </div>:
-          <></>
-      }
-
-
-          <div className="border-b border-black py-5">        
-             <Tabs 
-               expand = {expand} 
-               expandTab={expandTab} 
-               title={"Interviews"} 
-               tabIndex={4}
-             />
-             <div className={`${expandTab[4]? "h-full":"h-0"} overflow-hidden`}>
-
-              <UserPanelSchedule/>
-        
-             </div>
-          </div>
-          
-
-
-          
-{/*------------------------------------ earnings------------------------------------*/}
-
-{
-  info.role ==="interviewer" ?
-          <div className="border-b border-black py-5">
-             <Tabs 
-               expand = {expand} 
-               expandTab={expandTab} 
-               title={"Earnings"} 
-               tabIndex={4}
-             />
-             <div className={`${expandTab[4]? "h-full":"h-0"} overflow-hidden`}>
-                <Earnings />
-             </div>
-         </div>
-       :
-          <></>
-}
 		</div>
 	)
 }

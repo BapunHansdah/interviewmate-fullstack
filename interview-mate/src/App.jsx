@@ -11,7 +11,7 @@ import Verify from './components/Auth/verify'
 import Admin from './components/Admin/main'
 import NotFound from './components/notfound'
 import Layout from './layout'
-
+import ManageSlots from './components/manageSlots'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 
@@ -25,7 +25,8 @@ function App() {
               <Route path='/panel' element={<EditPanel/>} /> 
               <Route path='/search/:query' element={<SearchResult/>} />
               <Route path='/verify' element={<Verify/>} /> 
-              <Route path='/profile/:name' element={<Profile/>} />   
+              <Route path='/profile/:name' element={<Profile/>} />  
+              <Route path='/manage' element={<ManageSlots/>} />    
             </Route>
               <Route path='/login' element={<Login />} />
               <Route path='/signup' element={<SignUp />} />

@@ -1,6 +1,7 @@
 import moment from 'moment'
 import axios from 'axios'
 import useAuth from '../useAuth'
+import swal from 'sweetalert2'
 export default function list({data,date,setData,name}){
      const {auth} = useAuth()
 
@@ -11,11 +12,11 @@ export default function list({data,date,setData,name}){
                  'Authorization':(auth.token ? auth.token : "")
              }
         }).then(res=>{
-            console.log(res)
             setData(data.filter((s,i)=> s._id !== id))
+            swal.fire(res.data.msg)
         })
      }catch(err){
-        console.log(err)
+        swal.fire(err.response.data.msg)
      }
 
   }
@@ -31,8 +32,11 @@ export default function list({data,date,setData,name}){
                           <div key={s._id} className="text-xs text-white border border-black  hover:bg-opacity-90 rounded cursor-pointer bg-black flex justify-between">
                              <div className="bg-black px-2  p-1 rounded-l">{s.time}</div>
                              <div className="bg-gray-100 px-2  text-black p-1">{s.duration}</div>
-                             <div className="bg-orange-500 px-2  p-1">{s.price}</div>
-                             <div className="p-1  px-2 hover:bg-red-500 text-white rounded-r hover:text-white font-bold transition-all flex items-center" onClick={()=>deleteSlot(s._id)}>X</div>
+                             <div className={`${s.price !== 0 ?"bg-orange-500" : "bg-green-500"} px-2  p-1`}>{s.price}</div>
+                             {
+                                !s.booked ?  <button className="p-1  px-2 hover:bg-red-500 text-white rounded-r hover:text-white font-bold transition-all flex items-center" onClick={()=>deleteSlot(s._id)}>X</button> : <></>
+                             }
+                             
                           </div>
                       )
                  

@@ -2,28 +2,7 @@ import axios from 'axios'
 import {useState,useEffect} from 'react'
 
 export default function topicArr({topic}){
-    // const [profileData,setProfileData] = useState({})
-    // const [loading,setLoading] = useState(true)
-    // async function getProfileData(){
-    //      setLoading(true)
-    //         try{
-    //              await axios.get(`api/public/${name}/${id}`).then(res=>{
-    //                   setProfileData(res.data)
-    //                   setLoading(false)
-    //              })
-    //         }catch(err){
-    //             console.log(err)
-    //         }
-    //      }
-    //  useEffect(()=>{
-    //     getProfileData()
-    //  },[])
 
-     // if(loading){
-     //    return <>loading...</>
-     // }
-     console.log(topic)
-     // return null
     return (
            <>
              {

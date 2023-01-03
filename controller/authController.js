@@ -93,7 +93,11 @@ export const activate = async (req,res,next) =>{
 		    	    bio:'',
 		    	    website:'',
 		    	    role:role,
-		    	    topic:[]
+		    	    topic:[],
+		    	    profileRating:0,
+		    	    attended:0,
+		    	    interviewed:0,
+		    	    level:''
 		    		}) 
 		    		newInfo.save(err=>{
 		    			if(err){

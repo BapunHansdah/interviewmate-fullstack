@@ -43,7 +43,8 @@ export default function Header(){
 		     	 <>
 		     	  <div><img className="w-8 h-8 rounded-full object-contain cursor-pointer" onClick={openDropDown} src={info.avatar}/></div>
                     <div className={`${isDropDownActive ? "block": "hidden"} shadow absolute bg-white top-10 right-10 w-44 rounded py-2`}>
-		     	     <Link  to={`/profile/${info.user.username}`}><div className="text-sm font-semibold hover:bg-gray-100 cursor-pointer p-2" onClick={openDropDown}>Profile</div></Link> 		     			
+		     	     <Link  to={`/profile/${info.user.username}`}><div className="text-sm font-semibold hover:bg-gray-100 cursor-pointer p-2" onClick={openDropDown}>Profile</div></Link> 
+		     	     <Link  to="/manage"><div className="text-sm font-semibold hover:bg-gray-100 cursor-pointer p-2" onClick={openDropDown}>Manage Slots</div></Link> 		     					     			
 		     	     <Link  to="/panel"><div className="text-sm font-semibold hover:bg-gray-100 cursor-pointer p-2" onClick={openDropDown}>Edit profile</div></Link>
 		     	     <div className="text-sm font-semibold cursor-pointer p-2 bg-red-500 rounded hover:bg-red-400 text-white text-center" onClick={logOut}>Log Out</div>
 		     	  </div>

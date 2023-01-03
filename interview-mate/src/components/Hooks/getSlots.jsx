@@ -1,15 +1,17 @@
 import {useState,useEffect} from 'react'
 import axios from 'axios'
 import useAuth from '../useAuth'
-
+import moment from 'moment'
 export default ()=>{
  const [slotData,setSlotData] = useState([])
  const {auth} = useAuth()
+const [date, updateDate] = useState(moment(new Date()));
+
 
 async function getSlotData(){
         try{
           if(auth.token){
-             await axios.get('/api/slot/',{
+             await axios.get(`/api/slot/${moment(date).format("DD MMM YYYY")}`,{
                 'headers':{
                     'Authorization': (auth.token ? auth.token : "")
                 }
@@ -23,8 +25,8 @@ async function getSlotData(){
      }
  useEffect(()=>{
     getSlotData()
- },[auth.token])
+ },[auth.token,date])
 
- return {slotData,setSlotData}
+ return {slotData,setSlotData,date, updateDate}
 
 }

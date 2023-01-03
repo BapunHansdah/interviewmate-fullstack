@@ -28,13 +28,33 @@ const infoSchema = new Schema({
 		type:String,
 		default:"user"
 	},
-	price:{
+	minPrice:{
+		type:Number,
+		default:0
+	},
+	maxPrice:{
 		type:Number,
 		default:0
 	},
 	active:{
         type:Boolean,
         default:false
+	},
+	profileRating:{
+		type:Number,
+		default:0
+	},
+	interviewed:{
+		type:Number,
+		default:0
+	},
+	attended:{
+		type:Number,
+		default:0
+	},
+	level:{
+		type:String,
+		default:"Beginner"
 	},
 	topic:[
 	  {

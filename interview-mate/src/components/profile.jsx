@@ -15,23 +15,25 @@ import getSlots from './Hooks/getSlots'
 import {useParams} from 'react-router-dom'
 import swal from 'sweetalert2'
 // import { Button, Header, Image, Modal } from 'semantic-ui-react'
-
+import moment from 'moment'
 
 export default function InterviewerPost(){
 
 const {name} = useParams()
 
 
-
+const [date, updateDate] = useState(moment(new Date()));
 const [profileData,setProfileData] = useState({})
 const [loading,setLoading] = useState(true)
+const [availSlots,setAvailSlots] = useState([])
 
 async function getProfileData(){
         try{
-             await axios.get(`/api/public/profile/${name}`).then(res=>{
+             await axios.get(`/api/public/profile/${name}/${moment(date).format("DD MMM YYYY")}`).then(res=>{
                   console.log(res.data)
                   setLoading(false)
                   setProfileData(res.data)
+                  setAvailSlots(res.data.slot)
              })
         }catch(err){
             console.log(err)
@@ -41,7 +43,7 @@ async function getProfileData(){
      }
  useEffect(()=>{
     getProfileData()
- },[name])
+ },[name,date])
 
 
 
@@ -57,11 +59,11 @@ async function getProfileData(){
 
 	return(	
 		<div className="p-5 border shadow max-w-[1000px] mx-auto bg-white mt-10">
-          <Infos info={profileData.info} slot={profileData.slot} userReviewed={profileData.userReviewed}/>
+          <Infos info={profileData.info} slot={profileData.slot} userReviewed={profileData.userReviewed} minPrice={profileData.minPrice} maxPrice={profileData.maxPrice} />
           <Topic info={profileData.info.topic}/>
          {
          profileData.info.role==="interviewer" ?
-           <Slot info={profileData.slot} bio={profileData.info} topic={profileData.info.topic}/>:<></>
+           <Slot info={profileData.slot} date={date} updateDate={updateDate} availSlot={availSlots} setAvailSlot={setAvailSlots} bio={profileData.info} topic={profileData.info.topic}/>:<></>
          }
          {
          profileData.info.role==="interviewer" ?
