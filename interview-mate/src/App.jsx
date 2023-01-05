@@ -11,6 +11,7 @@ import Verify from './components/Auth/verify'
 import Admin from './components/Admin/main'
 import NotFound from './components/notfound'
 import Layout from './layout'
+import Testing from './components/testing'
 import ManageSlots from './components/manageSlots'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
@@ -32,7 +33,8 @@ function App() {
               <Route path='/signup' element={<SignUp />} />
               <Route path='/admin' element={<Admin/>} />
               <Route path='/error' element={<NotFound/>} />  
-              <Route path='*' element={<NotFound/>} />          
+              <Route path='*' element={<NotFound/>} />    
+              <Route path="testing" element={<Testing/>}/>      
           </Routes>
       </BrowserRouter> 
       </>

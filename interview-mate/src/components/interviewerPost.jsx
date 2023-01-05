@@ -1,14 +1,12 @@
 import {AiFillStar} from 'react-icons/ai'
 import {AiOutlineSchedule} from 'react-icons/ai'
-import axios from 'axios'
 import TopicArr from './topicArr'
-import {useState,useEffect} from 'react'
 import {Link,useNavigate} from 'react-router-dom'
 
 
 
 
-export default function InterviewerPost({query,filter,loading,profileData}){
+export default function InterviewerPost({loading,profileData}){
 
 
 

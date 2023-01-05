@@ -1,11 +1,12 @@
-import {BsCheckSquareFill} from 'react-icons/bs'
 import axios from 'axios'
+import {BsCheckSquareFill} from 'react-icons/bs'
 import useAuth from './useAuth'
 import {useEffect,useState} from 'react'
 import {Link} from 'react-router-dom'
 import Pagination from './Utils/pagination'
 
-export default function interviewPanelSchedules(){
+export default function testing(){
+
 
  const {auth} = useAuth()
  const [activeslotData,setActiveSlotData] = useState()
@@ -68,31 +69,61 @@ async function getActiveSlotData(){
   }
 
 
-
-
-
  useEffect(()=>{
     getActiveSlotData()
  },[auth.token])
 
-    console.log(activeslotData)
 
-    if(loading){
+
+
+	const tableSection = [
+	                      {id:1,tableName:"User",width:"96"},
+	                      {id:2,tableName:"Email",width:"96"},
+	                      {id:3,tableName:"Slots",width:"40"},
+	                      {id:4,tableName:"Topic",width:"72"},
+	                      {id:5,tableName:"Approve",width:"24"},
+	                      {id:6,tableName:"Completed",width:"24"}
+	                     ]
+	const Data = [
+	              [
+                  {id:1,tableData:"bapun",width:"96"},
+                  {id:2,tableData:"bapu@gmail",width:"96"},
+                  {id:3,tableData:"8:00",width:"40"},
+                  {id:4,tableData:"fronend",width:"72"},
+                  {id:5,tableData:"Approve",width:"24"},
+                  {id:6,tableData:"Completed",width:"24"}
+                  ],
+                  [
+                  {id:1,tableData:"barun",width:"96"},
+                  {id:2,tableData:"baru@gmail",width:"96"},
+                  {id:3,tableData:"8:00",width:"40"},
+                  {id:4,tableData:"fronend",width:"72"},
+                  {id:5,tableData:"Approve",width:"24"},
+                  {id:6,tableData:"Completed",width:"24"}
+                  ],
+                  [
+                  {id:1,tableData:"anique",width:"96"},
+                  {id:2,tableData:"anique@gmail",width:"96"},
+                  {id:3,tableData:"8:00",width:"40"},
+                  {id:4,tableData:"fronend",width:"72"},
+                  {id:5,tableData:"Approve",width:"24"},
+                  {id:6,tableData:"Completed",width:"24"}
+                  ],
+	             ]
+
+	if(loading){
     	return <>loading...</>
     }
 	return(
-		 <div className="mt-5">
-		   <div className=" overflow-x-auto md:overflow-x-auto mt-5  h-[500px]">
-		   {
-		   activeslotData && activeslotData.length > 0 ?
-		   	<>
+		  <div className="w-full grid overflow-x-auto gap-2">
 		    <div className="flex font-bold mx-auto">
-		     <div className="w-96 h-10 border flex items-center justify-center bg-black text-white">User</div>
-		     <div className="w-96 h-10 border flex items-center justify-center bg-black text-white">email</div>
-		     <div className="w-40 h-10 border flex items-center justify-center bg-black text-white">Slots</div>
-		     <div className="w-72 h-10 border flex items-center justify-center bg-black text-white">topic</div>
-		     <div className="w-24 h-10 border flex items-center justify-center bg-black text-white">Approve</div>
-		     <div className="w-24 h-10 border flex items-center justify-center bg-black text-white">Completed</div>
+		    {	
+		    	tableSection.map(t=>{
+		    		return (
+		                   <div key={t.id} className={`w-${t.width} h-10 border flex items-center justify-center bg-black text-white`}>{t.tableName}</div>
+		    			)
+		    	})
+		    }
 		    </div>
 		    {
 		      activeslotData && activeslotData.map((a,i)=>{
@@ -110,29 +141,10 @@ async function getActiveSlotData(){
 		                   </div>
 			              <div className="w-24 h-10 border flex items-center justify-center text-sm"><input type="checkbox" checked={a.approved} onChange={(e)=>approveSlot(e,a._id)}/></div>
 			              <div className={`w-24 h-10 border flex items-center justify-center ${a.completed? "bg-green-500" : ""}`}><BsCheckSquareFill style={{color:'white'}}/></div>
-		                  </div>
+		             </div>
 		    		)
 		        })	
 		    }
-		    </>
-		    :
-		    <>No Slots Yet</>
-		   }
-		  <div className="h-5"></div>
-
-
-		  </div>
-
-          <Pagination pageArray={pageArray} setPage={setPage} pageNumber={pageNumber}/>
-
-		  <div className="px-2 mt-2">
-		       <span className="text-md bg-blue-500 text-white px-2 font-bold">NOTES</span>
-		       <h1 className="bg-gray-100 px-2 py-1 font-semibold text-sm">1. Please create Invitation link on google meet at <a className="text-blue-500" href="https://meet.google.com/">https://meet.google.com/</a> after approving request.  <span className="text-red-500">[schedule in calender (recommanded)]</span></h1> 
-		       <h1 className="bg-gray-100 px-2 py-1 font-semibold text-sm">2. You will not be paid until the interviewee reviews the session.!!</h1> 
-		       <h1 className="bg-gray-100 px-2 py-1 font-semibold text-sm">3. Hope you satisfy the interviewee and get good rating !! </h1> 
-		       <h1 className="bg-gray-100 px-2 py-1 font-semibold text-sm">4. If any case, Interviewee forgot to review !! You are open to report at<span className="text-red-500"> report@interviewmates.com </span> with screen recording as proof.</h1> 
-		 
-		   </div>
 		  </div>
 		)
-}	
+}

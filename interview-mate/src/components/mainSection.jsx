@@ -1,15 +1,12 @@
 import {useState} from 'react'
-import getUserInfo from './Hooks/getUserInfo'
-import {Link,useNavigate} from 'react-router-dom'
+import {Link} from 'react-router-dom'
 import {BsSearch} from 'react-icons/bs'
 import HeroSection from './herosections'
-import useAuth from './useAuth'
 import image1 from '../assets/images/19.svg'
 import image2 from '../assets/images/55.svg'
 import image3 from '../assets/images/64.svg'
 
 export default function mainSection(){
-const {info,loading,auth} = getUserInfo()
 const [queryName,setQueryName] = useState("")
 const [topicRecommandation,setTopicRecommandation] = useState([{id:1,title:"frontend"},{id:2,title:"backend"},{id:3,title:"fullstack"},{id:4,title:"business"}])
 

@@ -14,7 +14,6 @@ import getTopics from './Hooks/getTopics'
 import getSlots from './Hooks/getSlots'
 import {useParams} from 'react-router-dom'
 import swal from 'sweetalert2'
-// import { Button, Header, Image, Modal } from 'semantic-ui-react'
 import moment from 'moment'
 
 export default function InterviewerPost(){

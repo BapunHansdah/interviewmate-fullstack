@@ -1,13 +1,15 @@
 import {BsCheckSquareFill} from 'react-icons/bs'
 import {MdOutlineRateReview} from 'react-icons/md'
-import useAuth from '../../useAuth'
+import useAuth from '../useAuth'
 import axios from 'axios'
 import {useEffect,useState} from 'react'
 import {Link} from 'react-router-dom'
 import Swal from 'sweetalert2'
 import Modal from 'react-modal'
 import { Rating } from 'react-simple-star-rating'
-import Pagination from '../../Utils/pagination'
+import Pagination from '../Utils/pagination'
+import Table from '../Utils/table'
+import UserSlotData from './userSlotDataTable' 
 
 
 export default function interviewPanelSchedules(){
@@ -22,6 +24,15 @@ export default function interviewPanelSchedules(){
  const [reviewText,setReviewText] = useState("")
  const [pageNumber,setPageNumber] = useState(0)
  const [totalBookedSlots,setTotalBookedSlots] = useState(0)
+
+  const tableSection = [
+                          {id:1,tableName:"interviewer",width:"96"},
+                          {id:2,tableName:"slots",width:"40"},
+                          {id:3,tableName:"Topic",width:"72"},
+                          {id:4,tableName:"Approved",width:"24"},
+                          {id:5,tableName:"attendend",width:"24"},
+                          {id:6,tableName:"cancel",width:"24"},
+                         ]
 
  const pageArray=new Array(totalBookedSlots).fill(0)
 
@@ -158,49 +169,25 @@ const bg = {
  useEffect(()=>{
     getApprovedSlotData()
  },[auth.token,pageNumber])
-  console.log(rating)
+
+
+
 
     if(loading){
     	return <>loading...</>
     }
+
+
+   
 	return(
 		 <div className="mt-5">
-		  <div className="overflow-x-scroll md:overflow-auto mt-5 h-[500px]">
+		  <div className="w-full grid overflow-x-auto gap-2">
 		  {
 		  approvedSlotData	&& approvedSlotData.length > 0 ?  
 		  	<>
-		    <div className="flex font-bold mx-auto">
-		     <div className="w-96 h-10 border flex items-center justify-center bg-black text-white">Interviewer</div>
-		     <div className="w-40 h-10 border flex items-center justify-center bg-black text-white">Slots</div>
-		     <div className="w-72 h-10 border flex items-center justify-center bg-black text-white">Topic</div>
-		     <div className="w-24 h-10 border flex items-center justify-center bg-black text-white">Approved</div>
-		     <div className="w-24 h-10 border flex items-center justify-center bg-black text-white">Attended</div>
-		     <div className="w-24 h-10 border flex items-center justify-center bg-black text-white">Cancel</div>
-		    </div>
-		    {
-		       approvedSlotData &&	approvedSlotData.map((a,i)=>{
-		       		return (
-		       			   <div className="flex mx-auto" key={a._id}>
-		       			      <div className={`w-96 h-10 border flex items-center justify-center text-sm ${a.booked ? "text-blue-500":"text-gray-400"}`}><Link to={`/profile/${a.by.username}`}>{a.by.username}</Link></div>
-			                  <div className={`w-40 h-10 border flex items-center justify-center text-sm ${a.booked ? "text-black":"text-gray-400"}`}>{`${a.time} ,${a.date}`}</div>
-			                  <div className={`w-72 h-10 border flex items-center justify-center overflow-y-auto ${a.booked ? "text-black":"text-gray-400"}`}>
-		                   {
-		                   	  a.topic.map(t=>{
-		                   	  	return <div key={t._id}>{t.title},</div>
-		                   	  })
-		                   }
-		                   </div>
-			                  <div className={`w-24 h-10 border flex items-center justify-center text-sm ${a.approved ? a.booked ? "bg-blue-500":"bg-blue-200" :""}`}><BsCheckSquareFill style={{color:'white'}}/></div>
-			                  <div className="w-24 h-10 border flex items-center justify-center text-sm"><button disabled={!a.approved || !a.booked} onClick={()=>openModal(a._id,a.by._id,a.review,a.rating)} className={`${!a.completed ? !a.approved || !a.booked ? "bg-orange-100" :"bg-orange-300":"bg-orange-500"} h-10 text-white w-full flex items-center gap-2 justify-center`}><MdOutlineRateReview/>{!a.completed ? "Review" : "Reviewed"}</button></div>
-		       			      {
-		       			      	!a.approved ?<div className="w-24 h-10 border flex items-center justify-center text-sm cursor-pointer text-white"><button className={`${a.booked ? "bg-red-500":"bg-red-100"} w-full h-10`} onClick={()=>openCancelModal(a._id)} disabled={!a.booked}>X</button></div>:<div className="w-24 h-10 border flex items-center text-white cursor-pointer justify-center text-sm bg-red-200">X</div>
-		       			      }
-		       			   </div>
-		       			)
-		       	})
-		       }
-
-		       <Modal isOpen={open} style={bg} className="max-w-md mx-auto border border-black bg-white h-fit mt-40 p-2">
+		    <Table tableSection={tableSection}/>
+		    <UserSlotData data={approvedSlotData} openModal={openModal} openCancelModal={openCancelModal}/>		  
+            <Modal isOpen={open} style={bg} className="max-w-md mx-auto border border-black bg-white h-fit mt-40 p-2">
                   <div className="p-2 flex flex-col gap-3"> 
                    <div>
                     <div>Rating</div>
@@ -213,15 +200,15 @@ const bg = {
                      </div>
                      <div>
                         <label>Write Review</label>
-                     	<textarea onChange={reviewHandle} value={reviewText} className="w-full p-2 h-40"/>
+                        <textarea onChange={reviewHandle} value={reviewText} className="w-full p-2 h-40"/>
                      </div>
                      <div className="flex gap-2">
                         <button onClick={()=>submitReview(reviewInfo.id,reviewInfo.by)} disabled={rating === 0 ? true : false} className={`px-2 py-1 text-white ${rating === 0 ? "bg-gray-200":"bg-black"}`}>Sumbit</button>
                         <button className="px-2 py-1 text-white bg-black" onClick={()=>setOpen(false)}>Cancel</button>
                      </div>
                   </div>
-                </Modal>
-		      </>
+              </Modal>
+             </>
 		    :
 		    <div>
 		    	<>No Interviews Yet !</>

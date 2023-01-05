@@ -30,6 +30,18 @@ function Login(){
    	setSign_info({...sign_info,[e.target.name]:e.target.value})
    }
 
+const InterviewerDemo = {email:"barunhansdah4@gmail.com",password:"123456"}
+const UserDemo = {email:"bapunhansdah777@gmail.com",password:"123456"}
+
+async function openDemo(user){
+      try{
+        await axios.post('api/auth/signin',user)
+        refreshPage()
+      }catch(err){
+        console.log(err)
+        swal.fire(err.response.data.msg)
+      }
+}
 
 
  function refreshPage() {
@@ -61,8 +73,10 @@ function Login(){
                 <h1 className="text-5xl font-semibold mb-2">Login</h1>
              	<input className="w-full p-2 border border-black bg-white" onChange={changeHandle} name="email" placeholder="email" />
              	<input className="w-full p-2 border border-black bg-white" onChange={changeHandle} name="password" placeholder="password" />
-             	<button className="w-full p-2 bg-[#1c1c1c] text-white mt-2">Login</button> 
-             	<p className="text-right text-sm">Forgot password ?</p>            	            	
+             	<button className="w-full p-2 bg-[#1c1c1c] text-white mt-2">Login</button>
+               <p className="text-left text-sm cursor-pointer" onClick={()=>openDemo({email:"barunhansdah4@gmail.com",password:"123456"})}>Login as Guest (Interviewer)</p>                              
+               <p className="text-left text-sm cursor-pointer" onClick={()=>openDemo({email:"bapunhansdah777@gmail.com",password:"123456"})}>Login as Guest (User)</p>                              
+               <p className="text-right text-sm">Forgot password ?</p>            	            	
              	<p className="text-center">Not register yet ? <span className="underline"><Link to="/signup">Create an account</Link></span></p>
              </form>
 		</div>

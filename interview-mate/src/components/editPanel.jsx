@@ -1,15 +1,6 @@
-import {AiFillStar} from 'react-icons/ai'
-import {AiOutlineSchedule} from 'react-icons/ai'
-import {MdEditLocationAlt} from 'react-icons/md'
-import {BsFillArrowLeftSquareFill} from 'react-icons/bs'
-import {BsFillArrowRightSquareFill} from 'react-icons/bs'
 import {RiImageEditFill} from 'react-icons/ri'
-import Reviews from './sections/read/comments'
 import moment from 'moment'
-import {AiOutlineRight} from 'react-icons/ai'
-import {AiOutlineDown} from 'react-icons/ai'
-import {useCallback,useState,useEffect} from 'react'
-import {DataJSON} from './Data'
+import {useState} from 'react'
 import Slot from './sections/edit/Slot'
 import Topic from './sections/edit/Topic'
 import Tabs from './Utils/tabs'
@@ -18,18 +9,12 @@ import getUserInfo from './Hooks/getUserInfo'
 import useAuth from './useAuth'
 import axios from 'axios'
 import getSlots from './Hooks/getSlots'
-import getTopics from './Hooks/getTopics'
 import swal from 'sweetalert2'
-
-
-
-
 
 export default function AdminPanel(){
 
 const {info,setInfo,active,setActive,topicData,setTopicData} = getUserInfo()
 const {auth} = useAuth()
-const [Data,setData] = useState(DataJSON)
 const [slots,setSlots] =useState({time:"08:00",duration:30,price:0}) 
 const [topics,setTopics] =useState("") 
 const {slotData,setSlotData,date, updateDate} = getSlots()
@@ -233,7 +218,6 @@ return(
           />
           <div className={`${expandTab[0]? "h-full":"h-0"} overflow-hidden transition-all`}>    
           <INFO 
-                 Data={Data}
                  submitInfo={submitInfo}
                  handleChangeInfo={handleChangeInfo}
                  Info={info}
@@ -298,9 +282,6 @@ return(
           :
           <></>
 }
-
-
-
 
 		</div>
 	)

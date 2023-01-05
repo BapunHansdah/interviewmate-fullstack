@@ -1,8 +1,6 @@
 import Earnings from './sections/read/Earnings'
-
-import InterviewPanelSchedules from './PanelSchedules'
-
-import UserPanelSchedule from './sections/edit/userPanelSchedule'
+import InterviewPanelSchedules from './manage/interviewerSlot'
+import UserPanelSchedule from './manage/userSlot'
 import getUserInfo from './Hooks/getUserInfo'
 import {useState} from 'react'
 import Tabs from './Utils/tabs'
